@@ -1,0 +1,10 @@
+{
+  "name": "whatsapp-session",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@whiskeysockets/baileys": "latest",
+    "express": "latest",
+    "pino": "latest"
+  }
+}
