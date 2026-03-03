@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة التحكم</title>
+
 <style>
 html,body{
   margin:0;
@@ -11,6 +12,12 @@ html,body{
   height:100%;
   font-family:'Segoe UI',sans-serif;
   overflow:hidden;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
   background:url('background.jpg') no-repeat center center/cover;
   position:relative;
 }
@@ -25,40 +32,36 @@ body::before{
   z-index:0;
 }
 
-/* الشعار العلوي الصغير */
-#tinyLogo{
-  position:absolute;
-  top:5px;
-  font-size:12px; /* صغير */
-  color:#fff;
-  font-weight:bold;
-  text-shadow:0 0 3px rgba(0,0,0,0.5);
-  width:100%;
-  text-align:center;
-  animation:floatTiny 2s ease-in-out infinite alternate;
-  z-index:2;
-}
-
-@keyframes floatTiny{
-  0%{transform:translateY(0);}
-  100%{transform:translateY(-2px);}
-}
-
-/* الشعار السفلي */
+/* الشعار */
 #logo{
   position:absolute;
-  bottom:10px;
-  font-size:24px;
+  top:25px;
+  font-size:34px;
   color:#fff;
   font-weight:bold;
-  text-shadow:0 0 10px rgba(255,255,255,0.4);
+  text-shadow:0 0 15px rgba(255,255,255,0.4);
   animation:float 2s ease-in-out infinite alternate;
   z-index:2;
 }
 
 @keyframes float{
   0%{transform:translateY(0);}
-  100%{transform:translateY(-5px);}
+  100%{transform:translateY(-8px);}
+}
+
+/* زر التحكم في الصوت */
+#audioBtn{
+  position:absolute;
+  top:25px;
+  right:15px;
+  font-size:14px;
+  padding:5px 10px;
+  border:none;
+  border-radius:5px;
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  cursor:pointer;
+  z-index:2;
 }
 
 /* الحاوية */
@@ -70,8 +73,8 @@ body::before{
   z-index:2;
 }
 
-/* أزرار زجاجية شفاف أسود */
-button{
+/* أزرار زجاجية */
+button.main-btn{
   width:250px;
   padding:15px;
   border-radius:14px;
@@ -85,18 +88,18 @@ button{
   transition:all .25s ease;
 }
 
-button:hover{
-  background:rgba(0,0,0,0.25);
+button.main-btn:hover{
+  background:rgba(0,0,0,0.65);
   transform:translateY(-3px);
   box-shadow:0 12px 30px rgba(0,0,0,0.6);
 }
 
-button:active{
-  background:rgba(0,0,0,0.3);
+button.main-btn:active{
+  background:rgba(0,0,0,0.8);
   transform:scale(0.96);
 }
 
-/* صندوق الرقم واتساب */
+/* صندوق الرقم */
 #whatsappBox{
   display:none;
   flex-direction:column;
@@ -138,27 +141,29 @@ input::placeholder{
 </head>
 <body>
 
-<div id="tinyLogo">✨</div>
+<div id="logo">♯ЅᗩFᏒOT꙯</div>
+<button id="audioBtn">🔊 تشغيل/إيقاف الصوت</button>
+
 <div class="container">
-  <button id="whatsappBtn">📲 جلسة واتساب</button>
+
+  <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
 
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
-    <button id="createSession">إنشاء جلسة</button>
+    <button class="main-btn" id="createSession">إنشاء جلسة</button>
   </div>
 
   <div class="response" id="result"></div>
 
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-    <button>المطور</button>
+    <button class="main-btn">المطور</button>
   </a>
 
   <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button>القناة</button>
+    <button class="main-btn">القناة</button>
   </a>
-</div>
 
-<div id="logo">كلمة حلوة</div>
+</div>
 
 <audio id="bgAudio" loop>
   <source src="sound.mp3" type="audio/mpeg">
@@ -170,14 +175,24 @@ const box = document.getElementById("whatsappBox");
 const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
+const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت أول ضغطة */
+/* تشغيل الصوت بعد أول تفاعل */
 document.addEventListener("click",()=>{
   if(audio.paused){
     audio.volume=0.3;
     audio.play().catch(()=>{});
   }
 },{once:true});
+
+/* زر التحكم بالصوت */
+audioBtn.onclick=()=>{
+  if(audio.paused){
+    audio.play().catch(()=>{});
+  }else{
+    audio.pause();
+  }
+};
 
 /* إظهار خانة الرقم */
 whatsappBtn.onclick=()=>{
@@ -187,14 +202,11 @@ whatsappBtn.onclick=()=>{
 /* إنشاء الجلسة */
 createBtn.onclick=async()=>{
   const number=document.getElementById("numberInput").value.trim();
-
   if(!number){
     result.innerText="❌ اكتب رقم صحيح";
     return;
   }
-
   result.innerText="⏳ جاري الاتصال...";
-
   try{
     const res=await fetch(`/api/whatsapp?number=${number}`);
     const data=await res.json();
