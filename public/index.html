@@ -36,7 +36,7 @@ body::before{
 #logo{
   position:absolute;
   top:25px;
-  font-size:24px; /* اصغر */
+  font-size:24px;
   color:#fff;
   font-weight:bold;
   text-shadow:0 0 10px rgba(255,255,255,0.4);
@@ -69,13 +69,6 @@ button.main-btn{
 button.main-btn:hover{
   background:rgba(0,0,0,0.55);
   transform:translateY(-2px);
-}
-
-/* زر الصوت صغير */
-button#audioBtn{
-  width:50px;
-  padding:8px;
-  font-size:20px;
 }
 
 /* صندوق الرقم */
@@ -124,15 +117,17 @@ input::placeholder{
 
 <div class="container">
 
+  <!-- زر جلسة واتساب -->
   <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
 
+  <!-- خانة الرقم + إنشاء الجلسة -->
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
     <button class="main-btn" id="createSession">إنشاء جلسة</button>
+    <div class="response" id="result"></div>
   </div>
 
-  <div class="response" id="result"></div>
-
+  <!-- أزرار خارجية -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
@@ -141,11 +136,12 @@ input::placeholder{
     <button class="main-btn">القناة</button>
   </a>
 
-  <!-- زر الصوت صغير أيقونة -->
+  <!-- زر التحكم بالصوت صغير -->
   <button class="main-btn" id="audioBtn">🔊</button>
 
 </div>
 
+<!-- الصوت الخلفي -->
 <audio id="bgAudio" loop>
   <source src="sound.mp3" type="audio/mpeg">
 </audio>
@@ -170,10 +166,10 @@ document.addEventListener("click",()=>{
 audioBtn.onclick=()=>{
   if(audio.paused){
     audio.play().catch(()=>{});
-    audioBtn.innerText="🔊";
+    audioBtn.innerText = "🔇"; // تغير الايقونة
   }else{
     audio.pause();
-    audioBtn.innerText="🔇";
+    audioBtn.innerText = "🔊";
   }
 };
 
@@ -190,10 +186,16 @@ createBtn.onclick=async()=>{
     return;
   }
   result.innerText="⏳ جاري الاتصال...";
+
   try{
-    const res=await fetch(`/api/whatsapp?number=${number}`);
-    const data=await res.json();
-    result.innerText=JSON.stringify(data,null,2);
+    const res = await fetch(`/api/whatsapp?number=${number}`);
+    const data = await res.json();
+
+    if(data.success){
+      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
+    } else {
+      result.innerText = data.message || "❌ حدث خطأ";
+    }
   }catch(err){
     result.innerText="❌ فشل الاتصال بالسيرفر";
   }
