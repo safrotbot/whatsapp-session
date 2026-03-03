@@ -22,7 +22,7 @@ Me inspiran otros bots y proyectos que demuestran cómo la automatización puede
 *🌿 Tarjeta de Presentación*
 
 <a href="https://github.com/dev-fedexyzz">
-  <img src="https://cardivo.vercel.app/api?name=𝘿𝙚𝙫-𝙛𝙚𝙙𝙚𝙭𝙮𝙯&description=Creador+de+Bots+y+editor+de+scripts+🌿&image=https://files.catbox.moe/4fel4e.png&backgroundColor=%23ecf0f1&instagram=dev-fedexyz13&whatsapp=dev-fedexyzz&pattern=leaf&colorPattern=%23eaeaea" alt="Tarjeta de Presentación de Fede" width="100%">
+  <img src="https://cardivo.vercel.app/api?name=Safrot&description=Creador+de+Bots+y+editor+de+scripts+🌿&image=https://files.catbox.moe/ehgqp2.jpg&backgroundColor=%23ecf0f1&instagram=dev-fedexyz13&whatsapp=dev-fedexyzz&pattern=leaf&colorPattern=%23eaeaea" alt="Tarjeta de Presentación de Fede" width="100%">
 </a>
 
 
