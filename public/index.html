@@ -3,47 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم الديناميكية - واتساب</title>
+<title>لوحة التحكم</title>
+
 <style>
-html, body {
-  margin: 0; padding: 0; height: 100%; font-family: sans-serif; overflow: hidden;
+html,body{
+margin:0;
+padding:0;
+height:100%;
+font-family:sans-serif;
+overflow:hidden;
 }
-body {
-  display: flex; justify-content: center; align-items: center;
-  background: url('background.jpg') no-repeat center center/cover; position: relative;
+
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+background:url('background.jpg') no-repeat center center/cover;
+position:relative;
 }
 
 /* الشعار */
-#logo {
-  position: absolute; top: 20px;
-  font-size: 30px; color: #fff; font-weight: bold;
-  text-shadow: 0 0 5px rgba(0,0,0,0.5);
-  animation: shake 1s ease-in-out infinite alternate;
+#logo{
+position:absolute;
+top:20px;
+font-size:30px;
+color:#fff;
+font-weight:bold;
+animation:shake 1s ease-in-out infinite alternate;
 }
-@keyframes shake { 0% { transform: translateY(0px); } 100% { transform: translateY(-5px); } }
+@keyframes shake{
+0%{transform:translateY(0);}
+100%{transform:translateY(-6px);}
+}
 
 /* الأزرار */
-.button-container {
-  display: flex; flex-direction: column; gap: 15px; align-items: center;
-}
-.button-container button {
-  width: 220px; padding: 15px 0; border: none; border-radius: 10px;
-  font-size: 16px; font-weight: bold; cursor: pointer;
-  background: rgba(0,0,0,0.7); color: #fff; transition: all 0.2s;
-}
-.button-container button:hover {
-  background: #ff4d4d; transform: scale(1.05);
+.container{
+display:flex;
+flex-direction:column;
+gap:15px;
+align-items:center;
 }
 
-/* الرد أسفل الزر */
-.button-container .response {
-  margin-top: 5px; color: #fff; font-size: 14px; text-align: center;
-  max-width: 220px; word-wrap: break-word;
+button{
+width:220px;
+padding:14px;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+background:rgba(0,0,0,0.7);
+color:#fff;
+transition:.2s;
 }
 
-@media (max-width: 480px) {
-  .button-container button { width: 160px; font-size: 14px; padding: 10px 0; }
-  #logo { font-size: 24px; }
+button:hover{
+background:#25D366;
+transform:scale(1.05);
+}
+
+#whatsappBox{
+display:none;
+flex-direction:column;
+gap:8px;
+align-items:center;
+}
+
+input{
+width:200px;
+padding:10px;
+border-radius:8px;
+border:none;
+text-align:center;
+}
+
+.response{
+color:#fff;
+margin-top:5px;
+text-align:center;
+max-width:220px;
+word-wrap:break-word;
 }
 </style>
 </head>
@@ -51,71 +89,61 @@ body {
 
 <div id="logo">♯ЅᗩFᏒOT꙯</div>
 
-<div class="button-container">
-  <button data-api="/api/hello">اختبر API</button>
-  <button id="whatsappBtn">واتساب</button>
-  <div class="response" id="whatsappResponse"></div>
-  <button data-api="/api/qr">QR Session</button>
-  <button data-api="/api/telegram">Telegram</button>
-  <button data-api="/api/vps">VPS</button>
+<div class="container">
+
+<button id="whatsappBtn">واتساب</button>
+
+<div id="whatsappBox">
+<input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
+<button id="createSession">إنشاء جلسة</button>
+</div>
+
+<div class="response" id="result"></div>
+
 </div>
 
 <audio id="bgAudio" loop>
-  <source src="sound.mp3" type="audio/mpeg">
+<source src="sound.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const audio = document.getElementById('bgAudio');
+const whatsappBtn = document.getElementById("whatsappBtn");
+const box = document.getElementById("whatsappBox");
+const createBtn = document.getElementById("createSession");
+const result = document.getElementById("result");
+const audio = document.getElementById("bgAudio");
 
-// تشغيل الصوت عند أول تفاعل مع أي زر
-document.querySelectorAll('.button-container button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (audio.paused) {
-      audio.volume = 0.3;
-      audio.play().catch(()=>console.log("الصوت يحتاج تفاعل المستخدم"));
-    }
-  });
-});
+/* تشغيل الصوت عند أول ضغطة */
+document.addEventListener("click",()=>{
+if(audio.paused){
+audio.volume=0.3;
+audio.play().catch(()=>{});
+}
+},{once:true});
 
-// أزرار غير واتساب
-document.querySelectorAll('.button-container button[data-api]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-        const url = btn.dataset.api;
-        const respDiv = btn.nextElementSibling?.classList.contains('response') ? btn.nextElementSibling : null;
-        if(respDiv) respDiv.textContent = 'جارٍ الاتصال... 🔄';
+/* إظهار خانة الرقم */
+whatsappBtn.onclick=()=>{
+box.style.display="flex";
+};
 
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            if(respDiv) respDiv.textContent = JSON.stringify(data, null, 2);
-        } catch (err) {
-            if(respDiv) respDiv.textContent = 'حدث خطأ ❌: ' + err.message;
-        }
-    });
-});
+/* إنشاء الجلسة */
+createBtn.onclick=async()=>{
+const number=document.getElementById("numberInput").value.trim();
+if(!number){
+result.innerText="❌ اكتب رقم صحيح";
+return;
+}
 
-// زر واتساب
-document.getElementById('whatsappBtn').addEventListener('click', async () => {
-    const number = prompt("💡 اكتب رقم الهاتف لجلسة واتساب (مثال: 967772350066):");
-    if (!number) return;
+result.innerText="⏳ جاري الاتصال...";
 
-    const respDiv = document.getElementById('whatsappResponse');
-    respDiv.textContent = '⏳ جارٍ إرسال طلب الجلسة للرقم: ' + number;
-
-    try {
-        const res = await fetch(`/api/whatsapp?number=${encodeURIComponent(number)}`);
-        const data = await res.json();
-        let code = data.code || data.message || null;
-
-        if(code) {
-            respDiv.textContent = `✅ كود الجلسة للرقم ${number}:\n${code}`;
-        } else {
-            respDiv.textContent = `⚠️ لم يتم العثور على كود للرقم ${number}.\n\nالاستجابة:\n${JSON.stringify(data,null,2)}`;
-        }
-    } catch(err) {
-        respDiv.textContent = '❌ حدث خطأ: ' + err.message;
-    }
-});
+try{
+const res=await fetch(`/api/whatsapp?number=${number}`);
+const data=await res.json();
+result.innerText=JSON.stringify(data,null,2);
+}catch(err){
+result.innerText="❌ فشل الاتصال بالسيرفر";
+}
+};
 </script>
 
 </body>
