@@ -46,7 +46,7 @@
   }
 
   .button-container button {
-    width: 200px;
+    width: 220px;
     padding: 15px 0;
     border: none;
     border-radius: 10px;
@@ -101,7 +101,7 @@
 
   @media (max-width: 480px) {
     .button-container button {
-      width: 150px;
+      width: 160px;
       font-size: 14px;
       padding: 10px 0;
     }
@@ -126,15 +126,29 @@
   <pre id="resultContent"></pre>
 </div>
 
+<!-- الصوت الخلفي -->
+<audio id="bgAudio" autoplay loop>
+  <source src="sound.mp3" type="audio/mpeg">
+  متصفحك لا يدعم تشغيل الصوت.
+</audio>
+
 <script>
 const resultModal = document.getElementById('serviceResult');
 const resultContent = document.getElementById('resultContent');
 const closeBtn = document.getElementById('closeBtn');
+const audio = document.getElementById('bgAudio');
 
 closeBtn.addEventListener('click', () => {
     resultModal.classList.remove('show');
 });
 
+// تشغيل الصوت (للتأكد من أن الصوت ممكن يشتغل بعد تفاعل المستخدم)
+window.addEventListener('load', () => {
+    audio.volume = 0.3;
+    audio.play().catch(() => console.log("الصوت يحتاج تفاعل المستخدم لتشغيله"));
+});
+
+// أزرار غير واتساب
 document.querySelectorAll('.button-container button[data-api]').forEach(btn => {
     btn.addEventListener('click', async () => {
         const url = btn.dataset.api;
@@ -151,7 +165,7 @@ document.querySelectorAll('.button-container button[data-api]').forEach(btn => {
     });
 });
 
-// خاص بالواتساب
+// زر واتساب - يظهر prompt لنفس الزر ويعمل الجلسة
 document.getElementById('whatsappBtn').addEventListener('click', async () => {
     const number = prompt("💡 اكتب رقم الهاتف لجلسة واتساب (مثال: 967772350066):");
     if (!number) return;
@@ -162,7 +176,7 @@ document.getElementById('whatsappBtn').addEventListener('click', async () => {
     try {
         const res = await fetch(`/api/whatsapp?number=${encodeURIComponent(number)}`);
         const data = await res.json();
-        let code = data.code || null;
+        let code = data.code || data.message || null;
 
         if (code) {
             resultContent.textContent = `✅ كود الجلسة للرقم ${number}:\n\n${code}\n\nاضغط على زر نسخ الكود في التطبيق.`;
