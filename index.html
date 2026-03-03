@@ -27,8 +27,18 @@
     display: block;
   }
 
-  .image-container button {
+  /* عمود الأزرار على يمين الصورة */
+  .buttons-column {
     position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .buttons-column button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -40,17 +50,10 @@
     transition: transform 0.2s, background 0.2s;
   }
 
-  .image-container button:hover {
+  .buttons-column button:hover {
     transform: scale(1.2);
     background: #ff4d4d;
   }
-
-  /* أماكن الأزرار */
-  #btn1 { top: 10%; left: 10%; }
-  #btn2 { top: 10%; right: 10%; }
-  #btn3 { top: 40%; left: 50%; transform: translateX(-50%); }
-  #btn4 { bottom: 20%; left: 20%; }
-  #btn5 { bottom: 20%; right: 20%; }
 
   /* المودال */
   #serviceResult {
@@ -89,7 +92,7 @@
   }
 
   @media (max-width: 480px) {
-    .image-container button {
+    .buttons-column button {
       width: 40px;
       height: 40px;
       font-size: 12px;
@@ -102,11 +105,13 @@
 <div class="image-container">
   <img src="background.jpg" alt="خلفية لوحة التحكم">
 
-  <button id="btn1" data-api="/api/hello">A</button>
-  <button id="btn2" data-api="/api/whatsapp">W</button>
-  <button id="btn3" data-api="/api/qr">Q</button>
-  <button id="btn4" data-api="/api/telegram">T</button>
-  <button id="btn5" data-api="/api/vps">V</button>
+  <div class="buttons-column">
+    <button data-api="/api/hello">A</button>
+    <button data-api="/api/whatsapp">W</button>
+    <button data-api="/api/qr">Q</button>
+    <button data-api="/api/telegram">T</button>
+    <button data-api="/api/vps">V</button>
+  </div>
 </div>
 
 <div id="serviceResult">
@@ -123,7 +128,7 @@ closeBtn.addEventListener('click', () => {
     resultModal.classList.remove('show');
 });
 
-document.querySelectorAll('.image-container button').forEach(btn => {
+document.querySelectorAll('.buttons-column button').forEach(btn => {
     btn.addEventListener('click', async () => {
         const url = btn.dataset.api;
         resultContent.textContent = 'جارٍ الاتصال... 🔄';
