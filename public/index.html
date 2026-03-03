@@ -26,17 +26,19 @@ position:relative;
 #logo{
 position:absolute;
 top:20px;
-font-size:30px;
-color:#fff;
+font-size:32px;
+color:#ffffff;
 font-weight:bold;
+text-shadow:0 0 10px rgba(0,0,0,0.7);
 animation:shake 1s ease-in-out infinite alternate;
 }
+
 @keyframes shake{
 0%{transform:translateY(0);}
 100%{transform:translateY(-6px);}
 }
 
-/* الأزرار */
+/* الحاوية */
 .container{
 display:flex;
 flex-direction:column;
@@ -44,23 +46,24 @@ gap:15px;
 align-items:center;
 }
 
+/* الأزرار */
 button{
-width:220px;
+width:230px;
 padding:14px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 font-size:16px;
 cursor:pointer;
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.75);
 color:#fff;
 transition:.2s;
 }
 
 button:hover{
-background:#25D366;
 transform:scale(1.05);
 }
 
+/* صندوق إدخال الرقم */
 #whatsappBox{
 display:none;
 flex-direction:column;
@@ -69,19 +72,21 @@ align-items:center;
 }
 
 input{
-width:200px;
+width:210px;
 padding:10px;
 border-radius:8px;
 border:none;
 text-align:center;
+outline:none;
 }
 
 .response{
 color:#fff;
 margin-top:5px;
 text-align:center;
-max-width:220px;
+max-width:230px;
 word-wrap:break-word;
+font-size:14px;
 }
 </style>
 </head>
@@ -91,14 +96,22 @@ word-wrap:break-word;
 
 <div class="container">
 
-<button id="whatsappBtn">واتساب</button>
+<button id="whatsappBtn">📲 جلسة واتساب</button>
 
 <div id="whatsappBox">
 <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
-<button id="createSession">إنشاء جلسة</button>
+<button id="createSession" style="background:#25D366;">إنشاء جلسة</button>
 </div>
 
 <div class="response" id="result"></div>
+
+<a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
+<button style="background:#128C7E;">📞 التواصل مع المطور</button>
+</a>
+
+<a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+<button style="background:#075E54;">📢 قناة واتساب</button>
+</a>
 
 </div>
 
@@ -113,7 +126,7 @@ const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
 
-/* تشغيل الصوت عند أول ضغطة */
+/* تشغيل الصوت أول ضغطة */
 document.addEventListener("click",()=>{
 if(audio.paused){
 audio.volume=0.3;
@@ -129,6 +142,7 @@ box.style.display="flex";
 /* إنشاء الجلسة */
 createBtn.onclick=async()=>{
 const number=document.getElementById("numberInput").value.trim();
+
 if(!number){
 result.innerText="❌ اكتب رقم صحيح";
 return;
