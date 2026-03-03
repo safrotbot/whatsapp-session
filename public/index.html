@@ -3,82 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم الديناميكية</title>
+<title>لوحة التحكم الديناميكية - واتساب</title>
 <style>
-  body {
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
     font-family: sans-serif;
-    background: #f0f0f0;
+    overflow: hidden;
+  }
+
+  body {
     display: flex;
     justify-content: center;
-    padding: 20px;
-  }
-
-  .image-container {
+    align-items: center;
+    background: url('background.jpg') no-repeat center center/cover;
     position: relative;
-    width: 100%;
-    max-width: 600px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
   }
 
-  .image-container img {
-    width: 100%;
-    display: block;
-  }
-
-  /* شعار ♯ЅᗩFᏒOT꙯ */
-  .logo {
+  /* الشعار */
+  #logo {
     position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 20px;
     font-size: 30px;
+    color: #fff;
     font-weight: bold;
-    color: #ff4d4d;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-    z-index: 10;
-    opacity: 0;
-    animation: slideDown 1s forwards;
-    animation-delay: 0.5s;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    animation: shake 1s ease-in-out infinite alternate;
   }
 
-  @keyframes slideDown {
-    to {
-      top: 10px;
-      opacity: 1;
-    }
+  @keyframes shake {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-5px); }
   }
 
-  /* الأزرار عمودية في وسط الصورة */
-  .image-container .buttons {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  /* الحاوية للأزرار */
+  .button-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    z-index: 5;
+    align-items: center;
   }
 
-  .image-container button {
-    padding: 12px 25px;
-    border-radius: 25px;
+  .button-container button {
+    width: 200px;
+    padding: 15px 0;
     border: none;
-    background: rgba(0,0,0,0.7);
-    color: #fff;
+    border-radius: 10px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    transition: all 0.2s;
   }
 
-  .image-container button:hover {
-    transform: scale(1.1);
+  .button-container button:hover {
     background: #ff4d4d;
+    transform: scale(1.05);
   }
 
-  /* المودال */
+  /* المودال للنتيجة */
   #serviceResult {
     display: none;
     position: fixed;
@@ -115,28 +100,25 @@
   }
 
   @media (max-width: 480px) {
-    .image-container button {
-      width: 100%;
+    .button-container button {
+      width: 150px;
       font-size: 14px;
-      padding: 10px;
+      padding: 10px 0;
     }
+    #logo { font-size: 24px; }
   }
 </style>
 </head>
 <body>
 
-<div class="image-container">
-  <img src="background.jpg" alt="خلفية لوحة التحكم">
+<div id="logo">♯ЅᗩFᏒOT꙯</div>
 
-  <div class="logo">♯ЅᗩFᏒOT꙯</div>
-
-  <div class="buttons">
-    <button data-api="/api/hello">اختبر الـ API</button>
-    <button data-api="/api/whatsapp">واتساب</button>
-    <button data-api="/api/qr">QR Session</button>
-    <button data-api="/api/telegram">Telegram</button>
-    <button data-api="/api/vps">VPS</button>
-  </div>
+<div class="button-container">
+  <button data-api="/api/hello">اختبر API</button>
+  <button id="whatsappBtn">واتساب</button>
+  <button data-api="/api/qr">QR Session</button>
+  <button data-api="/api/telegram">Telegram</button>
+  <button data-api="/api/vps">VPS</button>
 </div>
 
 <div id="serviceResult">
@@ -153,7 +135,7 @@ closeBtn.addEventListener('click', () => {
     resultModal.classList.remove('show');
 });
 
-document.querySelectorAll('.buttons button').forEach(btn => {
+document.querySelectorAll('.button-container button[data-api]').forEach(btn => {
     btn.addEventListener('click', async () => {
         const url = btn.dataset.api;
         resultContent.textContent = 'جارٍ الاتصال... 🔄';
@@ -167,6 +149,29 @@ document.querySelectorAll('.buttons button').forEach(btn => {
             resultContent.textContent = 'حدث خطأ ❌: ' + err.message;
         }
     });
+});
+
+// خاص بالواتساب
+document.getElementById('whatsappBtn').addEventListener('click', async () => {
+    const number = prompt("💡 اكتب رقم الهاتف لجلسة واتساب (مثال: 967772350066):");
+    if (!number) return;
+
+    resultContent.textContent = '⏳ جارٍ إرسال طلب الجلسة للرقم: ' + number;
+    resultModal.classList.add('show');
+
+    try {
+        const res = await fetch(`/api/whatsapp?number=${encodeURIComponent(number)}`);
+        const data = await res.json();
+        let code = data.code || null;
+
+        if (code) {
+            resultContent.textContent = `✅ كود الجلسة للرقم ${number}:\n\n${code}\n\nاضغط على زر نسخ الكود في التطبيق.`;
+        } else {
+            resultContent.textContent = `⚠️ لم يتم العثور على كود للرقم ${number}.\n\nالاستجابة:\n` + JSON.stringify(data, null, 2);
+        }
+    } catch (err) {
+        resultContent.textContent = '❌ حدث خطأ: ' + err.message;
+    }
 });
 </script>
 
