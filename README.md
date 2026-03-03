@@ -12,8 +12,8 @@ Me inspiran otros bots y proyectos que demuestran cómo la automatización puede
 ---
 
 <p align="center">
-  <a href="https://github.com/dev-fedexyzz">
-    <img src="https://komarev.com/ghpvc/?username=dev-fedexyzz&style=for-the-badge&label=☆+VISTAS&color=6e57ff" alt="dev-fedexyzz" />
+  <a href="https://api.whatsapp.com/send?phone=201115618853">
+    <img src="https://www.atom.bio/safrotbob-376&style=for-the-badge&label=☆+VISTAS&color=6e57ff" alt="dev-fedexyzz" />
   </a>
 </p>
 
@@ -41,14 +41,14 @@ Puedes encontrarme o contactarme a través de las siguientes plataformas:
 *📊 Estadísticas de GitHub*
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=dev-fedexyzz&show_icons=true&theme=radical" alt="GitHub Stats" />
+  <img src="https://api.whatsapp.com/send?phone=201115618853&show_icons=true&theme=radical" alt="GitHub Stats" />
   <br/>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=dev-fedexyzz&layout=compact&theme=radical" alt="Top Languages" />
+  <img src="https://api.whatsapp.com/send?phone=201148736413&layout=compact&theme=radical" alt="Top Languages" />
 </div>
 
 ## Github Stats  
 
-<div align="center"><img src="https://count.getloli.com/@ztrdiamond?name=ztrdiamond&theme=booru-lewd&padding=7&offset=0&align=center&scale=2&pixelated=1&darkmode=0" align="center"></div>
+<div align="center"><img src="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46&theme=booru-lewd&padding=7&offset=0&align=center&scale=2&pixelated=1&darkmode=0" align="center"></div>
 
 <br/>
 
