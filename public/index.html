@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - API Tester</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+  button { margin: 5px; padding: 10px 15px; cursor: pointer; }
+  p { margin-top: 5px; color: #333; }
+</style>
+</head>
+<body>
+
+<h1>لوحة التحكم - اختبار الـ API</h1>
+
+<!-- زر اختبار الـ API -->
+<button class="serviceBtn" data-api="/api/hello">جرب API</button>
+
+<!-- زر واتساب -->
+<button class="serviceBtn" data-api="/api/whatsapp">جرب واتساب</button>
+
+<!-- زر QR session -->
+<button class="serviceBtn" data-api="/api/qr">QR Session</button>
+
+<!-- زر Telegram -->
+<button class="serviceBtn" data-api="/api/telegram">Telegram</button>
+
+<!-- زر VPS -->
+<button class="serviceBtn" data-api="/api/vps">VPS</button>
+
+<p id="serviceResult">النتيجة ستظهر هنا...</p>
+
+<script>
+document.querySelectorAll('.serviceBtn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const url = btn.dataset.api;
+        const result = document.getElementById('serviceResult');
+        result.textContent = 'جارٍ الاتصال... 🔄';
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            result.textContent = JSON.stringify(data);
+        } catch (err) {
+            result.textContent = 'حدث خطأ ❌: ' + err.message;
+        }
+    });
+});
+</script>
+
+</body>
+</html>
