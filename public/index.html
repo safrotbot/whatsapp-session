@@ -4,153 +4,164 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة التحكم</title>
-
 <style>
 html,body{
-margin:0;
-padding:0;
-height:100%;
-font-family:'Segoe UI',sans-serif;
-overflow:hidden;
-}
-
-body{
-display:flex;
-justify-content:center;
-align-items:center;
-background:url('background.jpg') no-repeat center center/cover;
-position:relative;
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family:'Segoe UI',sans-serif;
+  overflow:hidden;
+  background:url('background.jpg') no-repeat center center/cover;
+  position:relative;
 }
 
 /* طبقة تغميق خفيفة */
 body::before{
-content:"";
-position:absolute;
-inset:0;
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(3px);
-z-index:0;
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(3px);
+  z-index:0;
 }
 
-/* الشعار */
+/* الشعار العلوي الصغير */
+#tinyLogo{
+  position:absolute;
+  top:5px;
+  font-size:12px; /* صغير */
+  color:#fff;
+  font-weight:bold;
+  text-shadow:0 0 3px rgba(0,0,0,0.5);
+  width:100%;
+  text-align:center;
+  animation:floatTiny 2s ease-in-out infinite alternate;
+  z-index:2;
+}
+
+@keyframes floatTiny{
+  0%{transform:translateY(0);}
+  100%{transform:translateY(-2px);}
+}
+
+/* الشعار السفلي */
 #logo{
-position:absolute;
-top:25px;
-font-size:34px;
-color:#fff;
-font-weight:bold;
-text-shadow:0 0 15px rgba(255,255,255,0.4);
-animation:float 2s ease-in-out infinite alternate;
-z-index:2;
+  position:absolute;
+  bottom:10px;
+  font-size:24px;
+  color:#fff;
+  font-weight:bold;
+  text-shadow:0 0 10px rgba(255,255,255,0.4);
+  animation:float 2s ease-in-out infinite alternate;
+  z-index:2;
 }
 
 @keyframes float{
-0%{transform:translateY(0);}
-100%{transform:translateY(-8px);}
+  0%{transform:translateY(0);}
+  100%{transform:translateY(-5px);}
 }
 
 /* الحاوية */
 .container{
-display:flex;
-flex-direction:column;
-gap:18px;
-align-items:center;
-z-index:2;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  align-items:center;
+  z-index:2;
 }
 
-/* أزرار زجاجية */
+/* أزرار زجاجية شفاف أسود */
 button{
-width:250px;
-padding:15px;
-border-radius:14px;
-border:1px solid rgba(255,255,255,0.2);
-background:rgba(0,0,0,0.45);
-color:#fff;
-font-size:16px;
-cursor:pointer;
-backdrop-filter:blur(12px);
-box-shadow:0 8px 25px rgba(0,0,0,0.4);
-transition:all .25s ease;
+  width:250px;
+  padding:15px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.45);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+  box-shadow:0 8px 25px rgba(0,0,0,0.4);
+  transition:all .25s ease;
 }
 
 button:hover{
-background:rgba(0,0,0,0.65);
-transform:translateY(-3px);
-box-shadow:0 12px 30px rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.25);
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.6);
 }
 
 button:active{
-background:rgba(0,0,0,0.8);
-transform:scale(0.96);
+  background:rgba(0,0,0,0.3);
+  transform:scale(0.96);
 }
 
-/* صندوق الرقم */
+/* صندوق الرقم واتساب */
 #whatsappBox{
-display:none;
-flex-direction:column;
-gap:10px;
-align-items:center;
-animation:fade .3s ease;
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
+  animation:fade .3s ease;
 }
 
 @keyframes fade{
-from{opacity:0;transform:translateY(-5px);}
-to{opacity:1;transform:translateY(0);}
+  from{opacity:0;transform:translateY(-5px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
 input{
-width:220px;
-padding:12px;
-border-radius:10px;
-border:none;
-outline:none;
-text-align:center;
-background:rgba(255,255,255,0.15);
-color:#fff;
-backdrop-filter:blur(10px);
+  width:220px;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  text-align:center;
+  background:rgba(255,255,255,0.15);
+  color:#fff;
+  backdrop-filter:blur(10px);
 }
 
 input::placeholder{
-color:#ddd;
+  color:#ddd;
 }
 
 .response{
-color:#fff;
-margin-top:5px;
-text-align:center;
-max-width:260px;
-word-wrap:break-word;
-font-size:14px;
+  color:#fff;
+  margin-top:5px;
+  text-align:center;
+  max-width:260px;
+  word-wrap:break-word;
+  font-size:14px;
 }
 </style>
 </head>
 <body>
 
-<div id="logo">♯ЅᗩFᏒOT꙯</div>
-
+<div id="tinyLogo">✨</div>
 <div class="container">
+  <button id="whatsappBtn">📲 جلسة واتساب</button>
 
-<button id="whatsappBtn">📲 جلسة واتساب</button>
+  <div id="whatsappBox">
+    <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
+    <button id="createSession">إنشاء جلسة</button>
+  </div>
 
-<div id="whatsappBox">
-<input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
-<button id="createSession">إنشاء جلسة</button>
+  <div class="response" id="result"></div>
+
+  <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
+    <button>المطور</button>
+  </a>
+
+  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+    <button>القناة</button>
+  </a>
 </div>
 
-<div class="response" id="result"></div>
-
-<a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-<button>📞 التواصل مع المطور</button>
-</a>
-
-<a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-<button>📢 قناة واتساب</button>
-</a>
-
-</div>
+<div id="logo">كلمة حلوة</div>
 
 <audio id="bgAudio" loop>
-<source src="sound.mp3" type="audio/mpeg">
+  <source src="sound.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -162,35 +173,35 @@ const audio = document.getElementById("bgAudio");
 
 /* تشغيل الصوت أول ضغطة */
 document.addEventListener("click",()=>{
-if(audio.paused){
-audio.volume=0.3;
-audio.play().catch(()=>{});
-}
+  if(audio.paused){
+    audio.volume=0.3;
+    audio.play().catch(()=>{});
+  }
 },{once:true});
 
 /* إظهار خانة الرقم */
 whatsappBtn.onclick=()=>{
-box.style.display="flex";
+  box.style.display="flex";
 };
 
 /* إنشاء الجلسة */
 createBtn.onclick=async()=>{
-const number=document.getElementById("numberInput").value.trim();
+  const number=document.getElementById("numberInput").value.trim();
 
-if(!number){
-result.innerText="❌ اكتب رقم صحيح";
-return;
-}
+  if(!number){
+    result.innerText="❌ اكتب رقم صحيح";
+    return;
+  }
 
-result.innerText="⏳ جاري الاتصال...";
+  result.innerText="⏳ جاري الاتصال...";
 
-try{
-const res=await fetch(`/api/whatsapp?number=${number}`);
-const data=await res.json();
-result.innerText=JSON.stringify(data,null,2);
-}catch(err){
-result.innerText="❌ فشل الاتصال بالسيرفر";
-}
+  try{
+    const res=await fetch(`/api/whatsapp?number=${number}`);
+    const data=await res.json();
+    result.innerText=JSON.stringify(data,null,2);
+  }catch(err){
+    result.innerText="❌ فشل الاتصال بالسيرفر";
+  }
 };
 </script>
 
