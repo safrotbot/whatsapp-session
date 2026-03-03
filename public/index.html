@@ -3,46 +3,143 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - API Tester</title>
+<title>لوحة التحكم الديناميكية</title>
 <style>
-  body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-  button { margin: 5px; padding: 10px 15px; cursor: pointer; }
-  p { margin-top: 5px; color: #333; }
+  body {
+    font-family: sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .image-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  }
+
+  .image-container img {
+    width: 100%;
+    display: block;
+  }
+
+  /* عمود الأزرار على يمين الصورة */
+  .buttons-column {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .buttons-column button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .buttons-column button:hover {
+    transform: scale(1.2);
+    background: #ff4d4d;
+  }
+
+  /* المودال */
+  #serviceResult {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    max-width: 90%;
+    max-height: 70%;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    z-index: 1000;
+  }
+
+  #serviceResult.show {
+    display: block;
+  }
+
+  #closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #ff4d4d;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  @media (max-width: 480px) {
+    .buttons-column button {
+      width: 40px;
+      height: 40px;
+      font-size: 12px;
+    }
+  }
 </style>
 </head>
 <body>
 
-<h1>لوحة التحكم - اختبار الـ API</h1>
+<div class="image-container">
+  <img src="background.jpg" alt="خلفية لوحة التحكم">
 
-<!-- زر اختبار الـ API -->
-<button class="serviceBtn" data-api="/api/hello">جرب API</button>
+  <div class="buttons-column">
+    <button data-api="/api/hello">A</button>
+    <button data-api="/api/whatsapp">W</button>
+    <button data-api="/api/qr">Q</button>
+    <button data-api="/api/telegram">T</button>
+    <button data-api="/api/vps">V</button>
+  </div>
+</div>
 
-<!-- زر واتساب -->
-<button class="serviceBtn" data-api="/api/whatsapp">جرب واتساب</button>
-
-<!-- زر QR session -->
-<button class="serviceBtn" data-api="/api/qr">QR Session</button>
-
-<!-- زر Telegram -->
-<button class="serviceBtn" data-api="/api/telegram">Telegram</button>
-
-<!-- زر VPS -->
-<button class="serviceBtn" data-api="/api/vps">VPS</button>
-
-<p id="serviceResult">النتيجة ستظهر هنا...</p>
+<div id="serviceResult">
+  <button id="closeBtn">×</button>
+  <pre id="resultContent"></pre>
+</div>
 
 <script>
-document.querySelectorAll('.serviceBtn').forEach(btn => {
+const resultModal = document.getElementById('serviceResult');
+const resultContent = document.getElementById('resultContent');
+const closeBtn = document.getElementById('closeBtn');
+
+closeBtn.addEventListener('click', () => {
+    resultModal.classList.remove('show');
+});
+
+document.querySelectorAll('.buttons-column button').forEach(btn => {
     btn.addEventListener('click', async () => {
         const url = btn.dataset.api;
-        const result = document.getElementById('serviceResult');
-        result.textContent = 'جارٍ الاتصال... 🔄';
+        resultContent.textContent = 'جارٍ الاتصال... 🔄';
+        resultModal.classList.add('show');
+
         try {
             const res = await fetch(url);
             const data = await res.json();
-            result.textContent = JSON.stringify(data);
+            resultContent.textContent = JSON.stringify(data, null, 2);
         } catch (err) {
-            result.textContent = 'حدث خطأ ❌: ' + err.message;
+            resultContent.textContent = 'حدث خطأ ❌: ' + err.message;
         }
     });
 });
