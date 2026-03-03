@@ -27,21 +27,44 @@
     display: block;
   }
 
-  /* عمود الأزرار على يمين الصورة */
-  .buttons-column {
+  /* شعار ♯ЅᗩFᏒOT꙯ */
+  .logo {
     position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: #ff4d4d;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    z-index: 10;
+    opacity: 0;
+    animation: slideDown 1s forwards;
+    animation-delay: 0.5s;
   }
 
-  .buttons-column button {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+  @keyframes slideDown {
+    to {
+      top: 10px;
+      opacity: 1;
+    }
+  }
+
+  /* الأزرار عمودية في وسط الصورة */
+  .image-container .buttons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 5;
+  }
+
+  .image-container button {
+    padding: 12px 25px;
+    border-radius: 25px;
     border: none;
     background: rgba(0,0,0,0.7);
     color: #fff;
@@ -50,8 +73,8 @@
     transition: transform 0.2s, background 0.2s;
   }
 
-  .buttons-column button:hover {
-    transform: scale(1.2);
+  .image-container button:hover {
+    transform: scale(1.1);
     background: #ff4d4d;
   }
 
@@ -92,10 +115,10 @@
   }
 
   @media (max-width: 480px) {
-    .buttons-column button {
-      width: 40px;
-      height: 40px;
-      font-size: 12px;
+    .image-container button {
+      width: 100%;
+      font-size: 14px;
+      padding: 10px;
     }
   }
 </style>
@@ -105,12 +128,14 @@
 <div class="image-container">
   <img src="background.jpg" alt="خلفية لوحة التحكم">
 
-  <div class="buttons-column">
-    <button data-api="/api/hello">A</button>
-    <button data-api="/api/whatsapp">W</button>
-    <button data-api="/api/qr">Q</button>
-    <button data-api="/api/telegram">T</button>
-    <button data-api="/api/vps">V</button>
+  <div class="logo">♯ЅᗩFᏒOT꙯</div>
+
+  <div class="buttons">
+    <button data-api="/api/hello">اختبر الـ API</button>
+    <button data-api="/api/whatsapp">واتساب</button>
+    <button data-api="/api/qr">QR Session</button>
+    <button data-api="/api/telegram">Telegram</button>
+    <button data-api="/api/vps">VPS</button>
   </div>
 </div>
 
@@ -128,7 +153,7 @@ closeBtn.addEventListener('click', () => {
     resultModal.classList.remove('show');
 });
 
-document.querySelectorAll('.buttons-column button').forEach(btn => {
+document.querySelectorAll('.buttons button').forEach(btn => {
     btn.addEventListener('click', async () => {
         const url = btn.dataset.api;
         resultContent.textContent = 'جارٍ الاتصال... 🔄';
