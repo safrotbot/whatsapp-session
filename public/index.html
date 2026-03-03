@@ -36,31 +36,10 @@ body::before{
 #logo{
   position:absolute;
   top:25px;
-  font-size:34px;
+  font-size:24px; /* اصغر */
   color:#fff;
   font-weight:bold;
-  text-shadow:0 0 15px rgba(255,255,255,0.4);
-  animation:float 2s ease-in-out infinite alternate;
-  z-index:2;
-}
-
-@keyframes float{
-  0%{transform:translateY(0);}
-  100%{transform:translateY(-8px);}
-}
-
-/* زر التحكم في الصوت */
-#audioBtn{
-  position:absolute;
-  top:25px;
-  right:15px;
-  font-size:14px;
-  padding:5px 10px;
-  border:none;
-  border-radius:5px;
-  background:rgba(0,0,0,0.4);
-  color:#fff;
-  cursor:pointer;
+  text-shadow:0 0 10px rgba(255,255,255,0.4);
   z-index:2;
 }
 
@@ -68,42 +47,35 @@ body::before{
 .container{
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:15px;
   align-items:center;
   z-index:2;
 }
 
-/* أزرار زجاجية */
+/* أزرار زجاجية شفافة */
 button.main-btn{
   width:250px;
-  padding:15px;
-  border-radius:14px;
+  padding:12px;
+  border-radius:12px;
   border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.45);
+  background:rgba(0,0,0,0.35);
   color:#fff;
   font-size:16px;
   cursor:pointer;
-  backdrop-filter:blur(12px);
-  box-shadow:0 8px 25px rgba(0,0,0,0.4);
-  transition:all .25s ease;
+  backdrop-filter:blur(10px);
+  transition:all .2s ease;
 }
 
 button.main-btn:hover{
-  background:rgba(0,0,0,0.65);
-  transform:translateY(-3px);
-  box-shadow:0 12px 30px rgba(0,0,0,0.6);
-}
-
-button.main-btn:active{
-  background:rgba(0,0,0,0.8);
-  transform:scale(0.96);
+  background:rgba(0,0,0,0.55);
+  transform:translateY(-2px);
 }
 
 /* صندوق الرقم */
 #whatsappBox{
   display:none;
   flex-direction:column;
-  gap:10px;
+  gap:8px;
   align-items:center;
   animation:fade .3s ease;
 }
@@ -115,14 +87,14 @@ button.main-btn:active{
 
 input{
   width:220px;
-  padding:12px;
-  border-radius:10px;
+  padding:10px;
+  border-radius:8px;
   border:none;
   outline:none;
   text-align:center;
   background:rgba(255,255,255,0.15);
   color:#fff;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(8px);
 }
 
 input::placeholder{
@@ -142,7 +114,6 @@ input::placeholder{
 <body>
 
 <div id="logo">♯ЅᗩFᏒOT꙯</div>
-<button id="audioBtn">🔊 تشغيل/إيقاف الصوت</button>
 
 <div class="container">
 
@@ -163,6 +134,9 @@ input::placeholder{
     <button class="main-btn">القناة</button>
   </a>
 
+  <!-- زر الصوت تحت زر القناة -->
+  <button class="main-btn" id="audioBtn">🔊 تشغيل/إيقاف الصوت</button>
+
 </div>
 
 <audio id="bgAudio" loop>
@@ -177,7 +151,7 @@ const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت بعد أول تفاعل */
+/* تشغيل الصوت بعد أول ضغطة */
 document.addEventListener("click",()=>{
   if(audio.paused){
     audio.volume=0.3;
