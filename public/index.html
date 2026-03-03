@@ -71,6 +71,13 @@ button.main-btn:hover{
   transform:translateY(-2px);
 }
 
+/* زر الصوت صغير */
+button#audioBtn{
+  width:50px;
+  padding:8px;
+  font-size:20px;
+}
+
 /* صندوق الرقم */
 #whatsappBox{
   display:none;
@@ -134,8 +141,8 @@ input::placeholder{
     <button class="main-btn">القناة</button>
   </a>
 
-  <!-- زر الصوت تحت زر القناة -->
-  <button class="main-btn" id="audioBtn">🔊 تشغيل/إيقاف الصوت</button>
+  <!-- زر الصوت صغير أيقونة -->
+  <button class="main-btn" id="audioBtn">🔊</button>
 
 </div>
 
@@ -163,8 +170,10 @@ document.addEventListener("click",()=>{
 audioBtn.onclick=()=>{
   if(audio.paused){
     audio.play().catch(()=>{});
+    audioBtn.innerText="🔊";
   }else{
     audio.pause();
+    audioBtn.innerText="🔇";
   }
 };
 
