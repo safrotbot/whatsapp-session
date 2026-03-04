@@ -16,7 +16,6 @@ html,body{
   background-size:cover;
 }
 
-/* طبقة تغميق خفيفة */
 body::before{
   content:"";
   position:absolute;
@@ -26,7 +25,6 @@ body::before{
   z-index:0;
 }
 
-/* الشعار فوق الصورة */
 #logo{
   position:absolute;
   top:20px;
@@ -37,10 +35,8 @@ body::before{
   color:#0ff;
   text-shadow:0 0 5px #0ff, 0 0 15px #0f0;
   z-index:2;
-  transition: text-shadow 0.3s ease;
 }
 
-/* الحاوية في نص الصفحة */
 .container{
   display:flex;
   flex-direction:column;
@@ -53,7 +49,6 @@ body::before{
   transform:translate(-50%, -50%);
 }
 
-/* أزرار Neon */
 button.main-btn{
   width:250px;
   padding:12px;
@@ -78,7 +73,6 @@ button.main-btn:active{
   box-shadow:0 0 30px #0ff,0 0 60px #0ff inset;
 }
 
-/* صندوق الرقم */
 #whatsappBox{
   display:none;
   flex-direction:column;
@@ -117,7 +111,6 @@ input::placeholder{
   font-size:14px;
 }
 
-/* حاوية زر القناة + الصوت */
 .audio-container{
   position:relative;
   display:flex;
@@ -125,7 +118,6 @@ input::placeholder{
   align-items:center;
 }
 
-/* زر الصوت Neon فوق يمين زر القناة */
 #audioBtn{
   width:35px;
   height:35px;
@@ -139,8 +131,8 @@ input::placeholder{
   box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;
   transition:all .2s ease, box-shadow 0.3s ease, color 0.3s ease;
   position:absolute;
-  top:-10px; /* فوق الزر شوية */
-  right:-10px; /* على اليمين */
+  top:-10px;
+  right:-10px;
 }
 #audioBtn:hover{
   background:rgba(0,0,0,0.55);
@@ -152,9 +144,16 @@ input::placeholder{
   box-shadow:0 0 35px #0ff,0 0 70px #0ff inset, 0 0 15px #0f0;
 }
 
-/* تأثير Hover للشعار Neon */
 .container:hover #logo{
   text-shadow:0 0 10px #0ff,0 0 20px #0f0,0 0 30px #0ff;
+}
+
+#qrImage{
+  margin-top:10px;
+  display:none;
+  width:200px;
+  border:2px solid #0ff;
+  border-radius:12px;
 }
 </style>
 </head>
@@ -163,22 +162,19 @@ input::placeholder{
 <div id="logo">♯ЅᗩFᏒOT꙯</div>
 
 <div class="container">
-  <!-- زر جلسة واتساب -->
   <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
 
-  <!-- خانة الرقم + إنشاء الجلسة -->
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
     <button class="main-btn" id="createSession">إنشاء جلسة</button>
     <div class="response" id="result"></div>
+    <img id="qrImage" />
   </div>
 
-  <!-- زر المطور -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
 
-  <!-- زر القناة + زر الصوت فوق يمين -->
   <div class="audio-container">
     <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
       <button class="main-btn">القناة</button>
@@ -187,7 +183,6 @@ input::placeholder{
   </div>
 </div>
 
-<!-- الصوت الخلفي -->
 <audio id="bgAudio" loop>
   <source src="sound.mp3" type="audio/mpeg">
 </audio>
@@ -197,10 +192,10 @@ const whatsappBtn = document.getElementById("whatsappBtn");
 const box = document.getElementById("whatsappBox");
 const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
+const qrImage = document.getElementById("qrImage");
 const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت بعد أول ضغطة */
 document.addEventListener("click",()=>{
   if(audio.paused){
     audio.volume=0.3;
@@ -208,7 +203,6 @@ document.addEventListener("click",()=>{
   }
 },{once:true});
 
-/* زر التحكم بالصوت */
 audioBtn.onclick=()=>{
   if(audio.paused){
     audio.play().catch(()=>{});
@@ -219,31 +213,33 @@ audioBtn.onclick=()=>{
   }
 };
 
-/* إظهار خانة الرقم */
 whatsappBtn.onclick=()=>{
   box.style.display="flex";
 };
 
-/* إنشاء الجلسة */
-createBtn.onclick=async()=>{
-  const number=document.getElementById("numberInput").value.trim();
+createBtn.onclick = async () => {
+  const number = document.getElementById("numberInput").value.trim();
+  qrImage.style.display = "none";
   if(!number){
-    result.innerText="❌ اكتب رقم صحيح";
+    result.innerText = "❌ اكتب رقم صحيح";
     return;
   }
-  result.innerText="⏳ جاري الاتصال...";
+  result.innerText = "⏳ جاري إنشاء الجلسة...";
 
   try{
     const res = await fetch(`/api/whatsapp?number=${number}`);
     const data = await res.json();
 
     if(data.success){
-      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
+      qrImage.src = data.qr;
+      qrImage.style.display = "block";
+      result.innerText = `✅ امسح الكيو آر للتفعيل`;
     } else {
       result.innerText = data.message || "❌ حدث خطأ";
     }
-  }catch(err){
-    result.innerText="❌ فشل الاتصال بالسيرفر";
+
+  } catch(err){
+    result.innerText = "❌ فشل الاتصال بالسيرفر";
   }
 };
 </script>
