@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - SAFROT Tech</title>
+<title>لوحة التحكم</title>
 
 <style>
 html,body{
@@ -12,71 +12,28 @@ html,body{
   height:100%;
   font-family:'Segoe UI',sans-serif;
   overflow:hidden;
-  background:#050510;
-  color:#fff;
+  background:url('background.jpg') no-repeat center center/cover;
 }
 
-body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  position:relative;
-}
-
-/* خطوط Neon تقنية */
-.tech-lines{
+/* طبقة تغميق خفيفة */
+body::before{
+  content:"";
   position:absolute;
   inset:0;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(3px);
   z-index:0;
-  overflow:hidden;
-}
-.tech-line{
-  position:absolute;
-  width:2px;
-  height:100%;
-  background:rgba(0,200,255,.15);
-  animation:moveLine linear infinite;
-}
-@keyframes moveLine{
-  0%{transform:translateY(-100%);}
-  100%{transform:translateY(100%);}
 }
 
-/* انعكاسات إضافية */
-.reflection{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle, rgba(0,200,255,0.05), transparent 70%);
-  animation:reflect 6s infinite alternate;
-  z-index:1;
-}
-@keyframes reflect{
-  0%{transform:translateY(0);}
-  100%{transform:translateY(-15px);}
-}
-
-/* شعار مع تأثير Glitch */
+/* الشعار */
 #logo{
   position:absolute;
   top:25px;
-  font-size:28px;
-  font-weight:bold;
-  letter-spacing:2px;
-  z-index:2;
+  font-size:24px;
   color:#0ff;
-  text-shadow:0 0 5px #0ff,0 0 10px #0ff,0 0 15px #a100ff;
-}
-@keyframes glitch{
-  0%{transform:translate(0);}
-  20%{transform:translate(-2px,2px);}
-  40%{transform:translate(2px,-2px);}
-  60%{transform:translate(-2px,-2px);}
-  80%{transform:translate(2px,2px);}
-  100%{transform:translate(0);}
-}
-#logo:hover{
-  animation:glitch 0.5s infinite;
+  font-weight:bold;
+  text-shadow:0 0 10px #0ff;
+  z-index:2;
 }
 
 /* الحاوية */
@@ -85,15 +42,10 @@ body{
   flex-direction:column;
   gap:15px;
   align-items:center;
-  background:rgba(15,15,35,.7);
-  padding:30px;
-  border-radius:18px;
-  backdrop-filter:blur(15px);
-  box-shadow:0 0 40px rgba(0,200,255,.2);
   z-index:2;
 }
 
-/* أزرار Neon + تأثير ضغط */
+/* أزرار Neon */
 button.main-btn{
   width:250px;
   padding:12px;
@@ -110,11 +62,11 @@ button.main-btn{
 button.main-btn:hover{
   background:rgba(0,0,0,0.55);
   transform:translateY(-2px);
-  box-shadow:0 0 20px #0ff,0 0 40px #a100ff inset;
+  box-shadow:0 0 20px #0ff,0 0 40px #0ff inset;
 }
 button.main-btn:active{
   transform:scale(0.95);
-  box-shadow:0 0 25px #0ff,0 0 50px #a100ff inset;
+  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
 }
 
 /* صندوق الرقم */
@@ -138,7 +90,7 @@ input{
   border:none;
   outline:none;
   text-align:center;
-  background:rgba(0,0,0,0.15);
+  background:rgba(255,255,255,0.15);
   color:#fff;
   backdrop-filter:blur(8px);
 }
@@ -156,35 +108,33 @@ input::placeholder{
   font-size:14px;
 }
 
-/* زر الصوت أيقونة Neon */
+/* زر الصوت Neon صغير */
 #audioBtn{
-  position:absolute;
-  bottom:20px;
-  right:20px;
   width:45px;
   height:45px;
   border-radius:50%;
-  border:none;
-  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(0,255,255,0.3);
+  background:rgba(0,0,0,0.35);
   color:#0ff;
   font-size:22px;
   cursor:pointer;
-  backdrop-filter:blur(8px);
-  box-shadow:0 0 10px #0ff,0 0 20px #0ff inset;
-  z-index:2;
-  transition:all .3s ease;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;
+  transition:all .2s ease;
 }
 #audioBtn:hover{
-  box-shadow:0 0 25px #0ff,0 0 40px #a100ff inset;
+  background:rgba(0,0,0,0.55);
+  box-shadow:0 0 20px #0ff,0 0 40px #0ff inset;
+}
+#audioBtn:active{
+  transform:scale(0.95);
+  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
 }
 </style>
 </head>
 <body>
 
 <div id="logo">♯ЅᗩFᏒOT꙯</div>
-
-<div class="tech-lines" id="lines"></div>
-<div class="reflection"></div>
 
 <div class="container">
 
@@ -204,6 +154,7 @@ input::placeholder{
     <button class="main-btn">القناة</button>
   </a>
 
+  <!-- زر الصوت Neon -->
   <button id="audioBtn">🔊</button>
 
 </div>
@@ -220,37 +171,30 @@ const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
-const lines = document.getElementById("lines");
 
-/* خطوط Neon */
-for(let i=0;i<30;i++){
-  let div=document.createElement('div');
-  div.className='tech-line';
-  div.style.left=Math.random()*100+'%';
-  div.style.animationDuration=(5+Math.random()*5)+'s';
-  lines.appendChild(div);
-}
-
-/* الصوت */
+/* تشغيل الصوت بعد أول ضغطة */
 document.addEventListener("click",()=>{
   if(audio.paused){
-    audio.volume=0.25;
+    audio.volume=0.3;
     audio.play().catch(()=>{});
   }
 },{once:true});
 
+/* زر التحكم بالصوت */
 audioBtn.onclick=()=>{
   if(audio.paused){
     audio.play().catch(()=>{});
-    audioBtn.innerText="🔇";
+    audioBtn.innerText = "🔇";
   }else{
     audio.pause();
-    audioBtn.innerText="🔊";
+    audioBtn.innerText = "🔊";
   }
 };
 
-/* خانة الرقم */
-whatsappBtn.onclick=()=>{ box.style.display="flex"; };
+/* إظهار خانة الرقم */
+whatsappBtn.onclick=()=>{
+  box.style.display="flex";
+};
 
 /* إنشاء الجلسة */
 createBtn.onclick=async()=>{
@@ -260,13 +204,15 @@ createBtn.onclick=async()=>{
     return;
   }
   result.innerText="⏳ جاري الاتصال...";
+
   try{
     const res = await fetch(`/api/whatsapp?number=${number}`);
     const data = await res.json();
+
     if(data.success){
-      result.innerHTML=`✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
-    }else{
-      result.innerText=data.message || "❌ حدث خطأ";
+      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
+    } else {
+      result.innerText = data.message || "❌ حدث خطأ";
     }
   }catch(err){
     result.innerText="❌ فشل الاتصال بالسيرفر";
