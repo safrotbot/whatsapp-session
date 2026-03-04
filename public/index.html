@@ -13,6 +13,10 @@ html,body{
   font-family:'Segoe UI',sans-serif;
   overflow:hidden;
   background:url('background.jpg') no-repeat center center/cover;
+  background-size:cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 /* طبقة تغميق خفيفة */
@@ -27,22 +31,24 @@ body::before{
 
 /* الشعار */
 #logo{
-  position:absolute;
-  top:25px;
-  font-size:24px;
-  color:#0ff;
+  font-size:20px; /* صغر الخط */
   font-weight:bold;
-  text-shadow:0 0 10px #0ff;
+  color:#0ff;
+  text-shadow:0 0 5px #0ff, 0 0 15px #0f0; /* Glow أخضر حول الشعار */
+  margin-bottom:20px;
   z-index:2;
+  transition: text-shadow 0.3s ease;
 }
 
-/* الحاوية */
+/* الحاوية كلها في النص */
 .container{
   display:flex;
   flex-direction:column;
   gap:15px;
   align-items:center;
   z-index:2;
+  position:relative;
+  text-align:center;
 }
 
 /* أزرار Neon */
@@ -62,11 +68,12 @@ button.main-btn{
 button.main-btn:hover{
   background:rgba(0,0,0,0.55);
   transform:translateY(-2px);
-  box-shadow:0 0 20px #0ff,0 0 40px #0ff inset;
+  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
+  text-shadow:0 0 5px #0ff;
 }
 button.main-btn:active{
   transform:scale(0.95);
-  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
+  box-shadow:0 0 30px #0ff,0 0 60px #0ff inset;
 }
 
 /* صندوق الرقم */
@@ -120,32 +127,40 @@ input::placeholder{
   cursor:pointer;
   backdrop-filter:blur(10px);
   box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;
-  transition:all .2s ease;
+  transition:all .2s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 #audioBtn:hover{
   background:rgba(0,0,0,0.55);
-  box-shadow:0 0 20px #0ff,0 0 40px #0ff inset;
+  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset, 0 0 10px #0f0;
+  color:#0f0;
 }
 #audioBtn:active{
   transform:scale(0.95);
-  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
+  box-shadow:0 0 35px #0ff,0 0 70px #0ff inset, 0 0 15px #0f0;
+}
+
+/* تأثير Hover للشعار Neon */
+.container:hover #logo{
+  text-shadow:0 0 10px #0ff,0 0 20px #0f0,0 0 30px #0ff;
 }
 </style>
 </head>
 <body>
 
-<div id="logo">♯ЅᗩFᏒOT꙯</div>
-
 <div class="container">
+  <div id="logo">♯ЅᗩFᏒOT꙯</div>
 
+  <!-- زر جلسة واتساب -->
   <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
 
+  <!-- خانة الرقم + إنشاء الجلسة -->
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
     <button class="main-btn" id="createSession">إنشاء جلسة</button>
     <div class="response" id="result"></div>
   </div>
 
+  <!-- أزرار خارجية -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
@@ -156,7 +171,6 @@ input::placeholder{
 
   <!-- زر الصوت Neon -->
   <button id="audioBtn">🔊</button>
-
 </div>
 
 <!-- الصوت الخلفي -->
