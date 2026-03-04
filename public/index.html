@@ -3,149 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - ربط البوت</title>
-
+<title>لوحة التحكم</title>
 <style>
-html,body{
-  margin:0;
-  padding:0;
-  height:100%;
-  font-family:'Segoe UI',sans-serif;
-  overflow:hidden;
-  background:url('background.jpg') no-repeat center center/cover;
-}
-body::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(3px);
-  z-index:0;
-}
-#logo{
-  position:absolute;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:16px;
-  font-weight:bold;
-  color:#0ff;
-  text-shadow:0 0 5px #0ff, 0 0 15px rgba(0,255,0,0.5);
-  z-index:2;
-}
-.container{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-  align-items:center;
-  z-index:2;
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-}
-button.main-btn{
-  width:250px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(0,255,255,0.3);
-  background:rgba(0,0,0,0.35);
-  color:#0ff;
-  font-size:16px;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-  transition:all .2s ease;
-  box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;
-}
-button.main-btn:hover{
-  background:rgba(0,0,0,0.55);
-  transform:translateY(-2px);
-  box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
-}
-#whatsappBox{
-  display:none;
-  flex-direction:column;
-  gap:8px;
-  align-items:center;
-  animation:fade .3s ease;
-}
-@keyframes fade{
-  from{opacity:0;transform:translateY(-5px);}
-  to{opacity:1;transform:translateY(0);}
-}
-input{
-  width:220px;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  outline:none;
-  text-align:center;
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-}
-.response{
-  color:#fff;
-  margin-top:10px;
-  text-align:center;
-  max-width:260px;
-  word-wrap:break-word;
-  font-size:14px;
-  white-space:pre-line;
-}
+html,body{margin:0;padding:0;height:100%;font-family:'Segoe UI',sans-serif;overflow:hidden;background:url('background.jpg') no-repeat center center/cover;}
+body::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(3px);z-index:0;}
+#logo{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:16px;font-weight:bold;color:#0ff;text-shadow:0 0 5px #0ff, 0 0 15px rgba(0,255,0,0.5);z-index:2;}
+.container{display:flex;flex-direction:column;gap:15px;align-items:center;z-index:2;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);}
+button.main-btn{width:250px;padding:12px;border-radius:12px;border:1px solid rgba(0,255,255,0.3);background:rgba(0,0,0,0.35);color:#0ff;font-size:16px;cursor:pointer;backdrop-filter:blur(10px);transition:all .2s ease;box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;}
+button.main-btn:hover{background:rgba(0,0,0,0.55);transform:translateY(-2px);box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;}
+#whatsappBox{display:none;flex-direction:column;gap:8px;align-items:center;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:translateY(0);}}
+input{width:220px;padding:10px;border-radius:8px;border:none;outline:none;text-align:center;background:rgba(255,255,255,0.15);color:#fff;}
+.response{color:#fff;margin-top:10px;text-align:center;max-width:260px;word-wrap:break-word;font-size:14px;white-space:pre-line;}
 </style>
 </head>
 <body>
-
 <div id="logo">♯ЅᗩFᏒOT꙯</div>
-
 <div class="container">
   <button class="main-btn" id="whatsappBtn">📲 ربط البوت</button>
-
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم مع كود الدولة">
     <button class="main-btn" id="createSession">🔗 احصل على كود الربط</button>
     <div class="response" id="result"></div>
   </div>
 </div>
-
 <script>
 const whatsappBtn = document.getElementById("whatsappBtn");
 const box = document.getElementById("whatsappBox");
 const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
 
-whatsappBtn.onclick = () => {
-  box.style.display = "flex";
-};
+whatsappBtn.onclick = () => { box.style.display = "flex"; };
 
 createBtn.onclick = async () => {
   const number = document.getElementById("numberInput").value.trim();
-  if(!number){
-    result.innerText = "❌ اكتب رقم صحيح";
-    return;
-  }
-
+  if(!number){ result.innerText = "❌ اكتب رقم صحيح"; return; }
   result.innerText = "⏳ جاري جلب كود الربط...";
-
   try{
-    // الاتصال بالسيرفر المحلي على Port 3001
-    const res = await fetch(`http://localhost:3001/pair?number=${number}`);
+    const res = await fetch(`/pair?number=${number}`);
     const data = await res.json();
-
     if(data.success){
-      // عرض الكود مباشرة
-      result.innerText =
-`✅ البوت جاهز للربط!
-
-📌 الكود:
-
-${data.qr || data.code || 'لا يوجد كود حالياً'}
-
-📲 افتح واتساب
-> الإعدادات
-> الأجهزة المرتبطة
-> ربط جهاز
-ثم أدخل الكود`;
+      result.innerText = `📌 كود الربط:\n\n${data.qr || 'لا يوجد كود حالياً'}\n\n📲 افتح واتساب\n> الإعدادات\n> الأجهزة المرتبطة\n> ربط جهاز\nثم أدخل الكود`;
     } else {
       result.innerText = data.message || "❌ حدث خطأ";
     }
@@ -155,6 +53,5 @@ ${data.qr || data.code || 'لا يوجد كود حالياً'}
   }
 };
 </script>
-
 </body>
 </html>
