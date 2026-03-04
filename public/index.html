@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
+<title>لوحة التحكم - ربط البوت</title>
 
 <style>
 html,body{
@@ -14,7 +14,6 @@ html,body{
   overflow:hidden;
   background:url('background.jpg') no-repeat center center/cover;
 }
-
 body::before{
   content:"";
   position:absolute;
@@ -23,7 +22,6 @@ body::before{
   backdrop-filter:blur(3px);
   z-index:0;
 }
-
 #logo{
   position:absolute;
   top:20px;
@@ -35,7 +33,6 @@ body::before{
   text-shadow:0 0 5px #0ff, 0 0 15px rgba(0,255,0,0.5);
   z-index:2;
 }
-
 .container{
   display:flex;
   flex-direction:column;
@@ -47,7 +44,6 @@ body::before{
   left:50%;
   transform:translate(-50%, -50%);
 }
-
 button.main-btn{
   width:250px;
   padding:12px;
@@ -66,7 +62,6 @@ button.main-btn:hover{
   transform:translateY(-2px);
   box-shadow:0 0 25px #0ff,0 0 50px #0ff inset;
 }
-
 #whatsappBox{
   display:none;
   flex-direction:column;
@@ -74,12 +69,10 @@ button.main-btn:hover{
   align-items:center;
   animation:fade .3s ease;
 }
-
 @keyframes fade{
   from{opacity:0;transform:translateY(-5px);}
   to{opacity:1;transform:translateY(0);}
 }
-
 input{
   width:220px;
   padding:10px;
@@ -90,7 +83,6 @@ input{
   background:rgba(255,255,255,0.15);
   color:#fff;
 }
-
 .response{
   color:#fff;
   margin-top:10px;
@@ -136,13 +128,16 @@ createBtn.onclick = async () => {
   result.innerText = "⏳ جاري جلب كود الربط...";
 
   try{
-    // هنا غير YOUR-SERVER.com للرابط الفعلي لسيرفرك
-    const res = await fetch(`https://veto-p.taib.store:3001/pair?number=${number}`);
+    // الاتصال بالسيرفر المحلي على Port 3001
+    const res = await fetch(`http://localhost:3001/pair?number=${number}`);
     const data = await res.json();
 
     if(data.success){
+      // عرض الكود مباشرة
       result.innerText =
-`📌 كود الربط:
+`✅ البوت جاهز للربط!
+
+📌 الكود:
 
 ${data.qr || data.code || 'لا يوجد كود حالياً'}
 
