@@ -117,13 +117,15 @@ input::placeholder{
   font-size:14px;
 }
 
-/* زر الصوت صغير Neon جنب زر القناة */
+/* حاوية زر القناة + الصوت */
 .audio-container{
+  position:relative;
   display:flex;
-  gap:10px;
   justify-content:center;
   align-items:center;
 }
+
+/* زر الصوت Neon فوق يمين زر القناة */
 #audioBtn{
   width:35px;
   height:35px;
@@ -136,6 +138,9 @@ input::placeholder{
   backdrop-filter:blur(10px);
   box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;
   transition:all .2s ease, box-shadow 0.3s ease, color 0.3s ease;
+  position:absolute;
+  top:-10px; /* فوق الزر شوية */
+  right:-10px; /* على اليمين */
 }
 #audioBtn:hover{
   background:rgba(0,0,0,0.55);
@@ -168,11 +173,12 @@ input::placeholder{
     <div class="response" id="result"></div>
   </div>
 
-  <!-- أزرار خارجية -->
+  <!-- زر المطور -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
 
+  <!-- زر القناة + زر الصوت فوق يمين -->
   <div class="audio-container">
     <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
       <button class="main-btn">القناة</button>
