@@ -1,59 +1,44 @@
-// pages/api/whatsapp.js
-import axios from "axios";
+import { default as makeWASocket, useSingleFileAuthState } from "@whiskeysockets/baileys";
+import P from "pino";
+import QRCode from "qrcode";
+
+// استعمل auth مؤقت
+const tempAuth = './temp-session.json';
 
 export default async function handler(req, res) {
   const { number } = req.query;
-
-  if (!number) {
-    return res.status(400).json({ success: false, message: "❌ لم يتم إدخال رقم" });
-  }
+  if (!number) return res.status(400).json({ success: false, message: "اكتب رقم صحيح" });
 
   try {
-    // هنا نرسل طلب للبوت/API الخارجي اللي بيولّد كود الجلسة
-    const url = `https://pair.davidcyril.name.ng/code?number=${encodeURIComponent(number)}`;
+    const { state, saveCreds } = await useSingleFileAuthState(tempAuth);
 
-    const response = await axios.get(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "application/json",
-      },
-      timeout: 20000,
+    const sock = makeWASocket({
+      printQRInTerminal: false,
+      auth: state,
+      logger: P({ level: "silent" })
     });
 
-    const data = response.data;
+    sock.ev.on('creds.update', saveCreds);
 
-    if (!data || Object.keys(data).length === 0) {
-      return res.status(200).json({
-        success: false,
-        number,
-        message: "⚠️ لم يتم العثور على كود جلسة بعد، حاول لاحقاً"
-      });
-    }
+    let qrCode = null;
 
-    // لو الكود موجود
-    if (data.code) {
-      return res.status(200).json({
-        success: true,
-        number,
-        code: data.code,
-        message: "✅ تم الحصول على كود الجلسة بنجاح"
-      });
-    }
-
-    // لو البيانات موجودة بس بدون حقل code
-    return res.status(200).json({
-      success: false,
-      number,
-      message: "✅ تم استلام الرقم لكن الكود غير متوفر حالياً",
-      details: data
+    sock.ev.on('connection.update', update => {
+      const { qr } = update;
+      if (qr) qrCode = qr;
     });
+
+    // ندي 5 ثواني عشان يظهر QR
+    await new Promise(r => setTimeout(r, 5000));
+
+    if (!qrCode) return res.json({ success: false, message: "❌ فشل إنشاء الجلسة" });
+
+    // تحويل QR لصورة base64
+    const qrImage = await QRCode.toDataURL(qrCode);
+
+    return res.json({ success: true, qr: qrImage });
 
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      number,
-      message: "❌ حدث خطأ في الاتصال بالخادم"
-    });
+    console.log(err);
+    return res.status(500).json({ success: false, message: "حدث خطأ داخلي" });
   }
 }
