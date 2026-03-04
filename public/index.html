@@ -39,9 +39,12 @@ createBtn.onclick = async () => {
   const number = document.getElementById("numberInput").value.trim();
   if(!number){ result.innerText = "❌ اكتب رقم صحيح"; return; }
   result.innerText = "⏳ جاري جلب كود الربط...";
+
   try{
-    const res = await fetch(`/pair?number=${number}`);
+    // هنا الرابط المباشر لسيرفرك مع endpoint /pair
+    const res = await fetch(`https://veto-p.taib.store/server/0e63231f/files/pair?number=${number}`);
     const data = await res.json();
+
     if(data.success){
       result.innerText = `📌 كود الربط:\n\n${data.qr || 'لا يوجد كود حالياً'}\n\n📲 افتح واتساب\n> الإعدادات\n> الأجهزة المرتبطة\n> ربط جهاز\nثم أدخل الكود`;
     } else {
