@@ -14,9 +14,6 @@ html,body{
   overflow:hidden;
   background:url('background.jpg') no-repeat center center/cover;
   background-size:cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
 }
 
 /* طبقة تغميق خفيفة */
@@ -29,26 +26,31 @@ body::before{
   z-index:0;
 }
 
-/* الشعار */
+/* الشعار فوق الصورة */
 #logo{
-  font-size:20px; /* صغر الخط */
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:18px;
   font-weight:bold;
   color:#0ff;
-  text-shadow:0 0 5px #0ff, 0 0 15px #0f0; /* Glow أخضر حول الشعار */
-  margin-bottom:20px;
+  text-shadow:0 0 5px #0ff, 0 0 15px #0f0;
   z-index:2;
   transition: text-shadow 0.3s ease;
 }
 
-/* الحاوية كلها في النص */
+/* الحاوية في نص الصفحة */
 .container{
   display:flex;
   flex-direction:column;
   gap:15px;
   align-items:center;
   z-index:2;
-  position:relative;
-  text-align:center;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
 }
 
 /* أزرار Neon */
@@ -115,15 +117,21 @@ input::placeholder{
   font-size:14px;
 }
 
-/* زر الصوت Neon صغير */
+/* زر الصوت صغير Neon جنب زر القناة */
+.audio-container{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  align-items:center;
+}
 #audioBtn{
-  width:45px;
-  height:45px;
+  width:35px;
+  height:35px;
   border-radius:50%;
   border:1px solid rgba(0,255,255,0.3);
   background:rgba(0,0,0,0.35);
   color:#0ff;
-  font-size:22px;
+  font-size:18px;
   cursor:pointer;
   backdrop-filter:blur(10px);
   box-shadow:0 0 5px #0ff,0 0 10px #0ff inset;
@@ -147,9 +155,9 @@ input::placeholder{
 </head>
 <body>
 
-<div class="container">
-  <div id="logo">♯ЅᗩFᏒOT꙯</div>
+<div id="logo">♯ЅᗩFᏒOT꙯</div>
 
+<div class="container">
   <!-- زر جلسة واتساب -->
   <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
 
@@ -165,12 +173,12 @@ input::placeholder{
     <button class="main-btn">المطور</button>
   </a>
 
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button class="main-btn">القناة</button>
-  </a>
-
-  <!-- زر الصوت Neon -->
-  <button id="audioBtn">🔊</button>
+  <div class="audio-container">
+    <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+      <button class="main-btn">القناة</button>
+    </a>
+    <button id="audioBtn">🔊</button>
+  </div>
 </div>
 
 <!-- الصوت الخلفي -->
