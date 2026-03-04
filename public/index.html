@@ -15,14 +15,15 @@ button.main-btn:hover{background:rgba(0,0,0,0.55);transform:translateY(-2px);box
 @keyframes fade{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:translateY(0);}}
 input{width:220px;padding:10px;border-radius:8px;border:none;outline:none;text-align:center;background:rgba(255,255,255,0.15);color:#fff;}
 .response{color:#fff;margin-top:10px;text-align:center;max-width:260px;word-wrap:break-word;font-size:14px;white-space:pre-line;}
-.audio-container{position:relative;display:flex;justify-content:center;align-items:center;}
-#audioBtn{width:35px;height:35px;border-radius:50%;border:1px solid rgba(0,255,255,0.3);background:rgba(0,0,0,0.35);color:#0ff;font-size:18px;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 0 5px #0ff inset;position:absolute;top:-10px;right:-10px;}
+.audio-container{position:relative;display:flex;justify-content:center;align-items:center;gap:10px;}
+#audioBtn{width:35px;height:35px;border-radius:50%;border:1px solid rgba(0,255,255,0.3);background:rgba(0,0,0,0.35);color:#0ff;font-size:18px;cursor:pointer;backdrop-filter:blur(10px);box-shadow:0 0 5px #0ff inset;}
 </style>
 </head>
 <body>
-<div id="logo">♯ЅᗩFᏒOT꙯</div>
-<div class="container">
 
+<div id="logo">♯ЅᗩFᏒOT꙯</div>
+
+<div class="container">
   <button class="main-btn" id="whatsappBtn">📲 ربط البوت</button>
 
   <div id="whatsappBox">
@@ -31,22 +32,20 @@ input{width:220px;padding:10px;border-radius:8px;border:none;outline:none;text-a
     <div class="response" id="result"></div>
   </div>
 
-  <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-    <button class="main-btn">💬 شات المطور</button>
-  </a>
-
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button class="main-btn">📺 القناة</button>
-  </a>
-
   <div class="audio-container">
+    <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
+      <button class="main-btn">💬 شات المطور</button>
+    </a>
+    <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+      <button class="main-btn">📺 القناة</button>
+    </a>
     <button id="audioBtn">🔊</button>
-    <audio id="bgAudio" loop>
-      <source src="sound.mp3" type="audio/mpeg">
-    </audio>
   </div>
-
 </div>
+
+<audio id="bgAudio" loop>
+  <source src="sound.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 const whatsappBtn = document.getElementById("whatsappBtn");
@@ -56,28 +55,32 @@ const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
 
-// تشغيل الصوت عند أول نقرة
-document.addEventListener("click",()=>{
-  if(audio.paused){ audio.volume=0.3; audio.play().catch(()=>{}); }
-},{once:true});
+whatsappBtn.onclick = () => { box.style.display = "flex"; };
 
-audioBtn.onclick=()=>{
+audioBtn.onclick = () => {
   if(audio.paused){ audio.play().catch(()=>{}); audioBtn.innerText="🔇"; }
   else { audio.pause(); audioBtn.innerText="🔊"; }
 };
 
-whatsappBtn.onclick = () => { box.style.display = "flex"; };
+document.addEventListener("click",()=>{
+  if(audio.paused){ audio.volume=0.3; audio.play().catch(()=>{}); }
+},{once:true});
+
+// **هنا رابط API السيرفر اللي فيه server.js**
+const API_URL = "https://veto-p.taib.store/server/0e63231f";
 
 createBtn.onclick = async () => {
   const number = document.getElementById("numberInput").value.trim();
   if(!number){ result.innerText = "❌ اكتب رقم صحيح"; return; }
+
   result.innerText = "⏳ جاري جلب كود الربط...";
 
   try{
-    const res = await fetch(`https://veto-p.taib.store/server/0e63231f/files/pair?number=${number}`);
+    const res = await fetch(`${API_URL}/pair?number=${number}`);
     const data = await res.json();
+
     if(data.success){
-      result.innerText = `📌 كود الربط:\n\n${data.qr || 'لا يوجد كود حالياً'}\n\n📲 افتح واتساب\n> الإعدادات\n> الأجهزة المرتبطة\n> ربط جهاز\nثم أدخل الكود`;
+      result.innerText = `📌 كود الربط:\n\n${data.qr || 'لا يوجد كود حالياً'}\n\n📲 افتح واتساب\n> الإعدادات\n> الأجهزة المرتطبة\n> ربط جهاز\nثم أدخل الكود`;
     } else {
       result.innerText = data.message || "❌ حدث خطأ";
     }
@@ -87,5 +90,6 @@ createBtn.onclick = async () => {
   }
 };
 </script>
+
 </body>
 </html>
