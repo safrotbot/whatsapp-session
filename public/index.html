@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
+<title>SAFROT AI Dashboard</title>
 
 <style>
 html,body{
@@ -12,70 +12,85 @@ html,body{
   height:100%;
   font-family:'Segoe UI',sans-serif;
   overflow:hidden;
+  background:#050510;
+  color:#fff;
 }
 
 body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:url('background.jpg') no-repeat center center/cover;
   position:relative;
 }
 
-/* طبقة تغميق خفيفة */
+/* خلفية متحركة */
 body::before{
   content:"";
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(3px);
+  background:radial-gradient(circle at 20% 30%, rgba(0,150,255,.15), transparent 40%),
+             radial-gradient(circle at 80% 70%, rgba(140,0,255,.15), transparent 40%);
+  animation:bgMove 8s infinite alternate;
   z-index:0;
 }
 
-/* الشعار */
+@keyframes bgMove{
+  from{transform:translateY(-10px);}
+  to{transform:translateY(10px);}
+}
+
+/* اللوجو */
 #logo{
   position:absolute;
   top:25px;
-  font-size:24px;
-  color:#fff;
+  font-size:26px;
   font-weight:bold;
-  text-shadow:0 0 10px rgba(255,255,255,0.4);
+  letter-spacing:2px;
+  background:linear-gradient(90deg,#00f0ff,#a100ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 15px rgba(0,255,255,.5);
   z-index:2;
 }
 
-/* الحاوية */
+/* الكارت */
 .container{
   display:flex;
   flex-direction:column;
-  gap:15px;
+  gap:18px;
   align-items:center;
+  background:rgba(15,15,35,.7);
+  padding:30px;
+  border-radius:18px;
+  backdrop-filter:blur(15px);
+  box-shadow:0 0 40px rgba(0,200,255,.2);
   z-index:2;
 }
 
-/* أزرار زجاجية شفافة */
+/* أزرار */
 button.main-btn{
-  width:250px;
+  width:260px;
   padding:12px;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.35);
-  color:#fff;
-  font-size:16px;
+  border:none;
+  font-size:15px;
   cursor:pointer;
-  backdrop-filter:blur(10px);
-  transition:all .2s ease;
+  background:linear-gradient(90deg,#007cf0,#a100ff);
+  color:#fff;
+  transition:.3s;
+  box-shadow:0 0 15px rgba(0,200,255,.4);
 }
 
 button.main-btn:hover{
-  background:rgba(0,0,0,0.55);
-  transform:translateY(-2px);
+  transform:scale(1.05);
+  box-shadow:0 0 25px rgba(0,200,255,.8);
 }
 
 /* صندوق الرقم */
 #whatsappBox{
   display:none;
   flex-direction:column;
-  gap:8px;
+  gap:10px;
   align-items:center;
   animation:fade .3s ease;
 }
@@ -86,117 +101,91 @@ button.main-btn:hover{
 }
 
 input{
-  width:220px;
+  width:240px;
   padding:10px;
-  border-radius:8px;
+  border-radius:10px;
   border:none;
   outline:none;
   text-align:center;
-  background:rgba(255,255,255,0.15);
+  background:rgba(255,255,255,.1);
   color:#fff;
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(10px);
 }
 
-input::placeholder{
-  color:#ddd;
-}
+input::placeholder{color:#ccc;}
 
 .response{
-  color:#fff;
-  margin-top:5px;
+  margin-top:8px;
   text-align:center;
-  max-width:260px;
-  word-wrap:break-word;
   font-size:14px;
+  max-width:260px;
+}
+
+/* لودينج */
+.loader{
+  border:3px solid rgba(255,255,255,.2);
+  border-top:3px solid #00f0ff;
+  border-radius:50%;
+  width:18px;
+  height:18px;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
 }
 </style>
 </head>
 <body>
 
-<div id="logo">♯ЅᗩFᏒOT꙯</div>
+<div id="logo">SAFROT AI</div>
 
 <div class="container">
 
-  <!-- زر جلسة واتساب -->
-  <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
+  <button class="main-btn" id="whatsappBtn">📲 إنشاء جلسة واتساب</button>
 
-  <!-- خانة الرقم + إنشاء الجلسة -->
   <div id="whatsappBox">
-    <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
-    <button class="main-btn" id="createSession">إنشاء جلسة</button>
+    <input type="text" id="numberInput" placeholder="201XXXXXXXX">
+    <button class="main-btn" id="createSession">تشغيل الجلسة</button>
     <div class="response" id="result"></div>
   </div>
 
-  <!-- أزرار خارجية -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
 
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button class="main-btn">القناة</button>
-  </a>
-
-  <!-- زر التحكم بالصوت صغير -->
-  <button class="main-btn" id="audioBtn">🔊</button>
-
 </div>
-
-<!-- الصوت الخلفي -->
-<audio id="bgAudio" loop>
-  <source src="sound.mp3" type="audio/mpeg">
-</audio>
 
 <script>
 const whatsappBtn = document.getElementById("whatsappBtn");
 const box = document.getElementById("whatsappBox");
 const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
-const audio = document.getElementById("bgAudio");
-const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت بعد أول ضغطة */
-document.addEventListener("click",()=>{
-  if(audio.paused){
-    audio.volume=0.3;
-    audio.play().catch(()=>{});
-  }
-},{once:true});
-
-/* زر التحكم بالصوت */
-audioBtn.onclick=()=>{
-  if(audio.paused){
-    audio.play().catch(()=>{});
-    audioBtn.innerText = "🔇"; // تغير الايقونة
-  }else{
-    audio.pause();
-    audioBtn.innerText = "🔊";
-  }
-};
-
-/* إظهار خانة الرقم */
 whatsappBtn.onclick=()=>{
   box.style.display="flex";
 };
 
-/* إنشاء الجلسة */
 createBtn.onclick=async()=>{
   const number=document.getElementById("numberInput").value.trim();
-  if(!number){
-    result.innerText="❌ اكتب رقم صحيح";
+  if(!number.match(/^20\\d{10}$/)){
+    result.innerText="❌ الرقم لازم يبدأ بـ 20 ويتكون من 12 رقم";
     return;
   }
-  result.innerText="⏳ جاري الاتصال...";
+
+  result.innerHTML='<div class="loader"></div>';
 
   try{
     const res = await fetch(`/api/whatsapp?number=${number}`);
     const data = await res.json();
 
     if(data.success){
-      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
-    } else {
-      result.innerText = data.message || "❌ حدث خطأ";
+      result.innerHTML=`✅ كود الجلسة:<br><b>${data.code || "غير متوفر"}</b>`;
+    }else{
+      result.innerText=data.message || "❌ حدث خطأ";
     }
-  }catch(err){
+  }catch{
     result.innerText="❌ فشل الاتصال بالسيرفر";
   }
 };
