@@ -11,9 +11,6 @@ html,body{
   padding:0;
   height:100%;
   font-family:'Segoe UI',sans-serif;
-  overflow:hidden;
-}
-body{
   display:flex;
   justify-content:center;
   align-items:center;
@@ -40,12 +37,12 @@ body::before{
 .container{
   display:flex;
   flex-direction:column;
-  gap:15px;
+  gap:12px;
   align-items:center;
   z-index:2;
 }
 button.main-btn{
-  width:200px;
+  width:220px;
   padding:12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.2);
@@ -74,14 +71,6 @@ input{
 input::placeholder{
   color:#ddd;
 }
-.response{
-  color:#fff;
-  margin-top:5px;
-  text-align:center;
-  max-width:260px;
-  word-wrap:break-word;
-  font-size:14px;
-}
 #audioBtn{
   width:35px;
   height:35px;
@@ -98,47 +87,39 @@ input::placeholder{
 }
 </style>
 </head>
-
 <body>
 
 <div id="logo">♯ЅᗩFᏒOT꙯</div>
 
 <div class="container">
 
-  <!-- زر طلب الكود -->
-  <button class="main-btn" id="getCodeBtn">📡 طلب الكود</button>
-  <input id="number" placeholder="+201XXXXXXXXX">
-  <button class="main-btn" id="copyBtn">📋 نسخ الكود</button>
-  <button class="main-btn" id="resetBtn">🧹 تنظيف</button>
+  <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
+
+  <button class="main-btn" id="getCodeBtn">📡 طلب الكود ونسخه</button>
+
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">👨‍💻 المطور</button>
   </a>
+
   <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
     <button class="main-btn">📢 القناة</button>
   </a>
 
-  <div class="response" id="result">لم يتم طلب كود بعد</div>
-  <div class="response" id="cooldown"></div>
+  <button id="audioBtn">🔊</button>
 
 </div>
 
-<button id="audioBtn">🔊</button>
 <audio id="bgAudio" loop>
   <source src="sound.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-let lastCode="";
-let wait=false;
+const getCodeBtn = document.getElementById("getCodeBtn");
+const numberInput = document.getElementById("numberInput");
+const audio = document.getElementById("bgAudio");
+const audioBtn = document.getElementById("audioBtn");
 
-const audio=document.getElementById("bgAudio");
-const audioBtn=document.getElementById("audioBtn");
-const getBtn=document.getElementById("getCodeBtn");
-const copyBtn=document.getElementById("copyBtn");
-const resetBtn=document.getElementById("resetBtn");
-const result=document.getElementById("result");
-
-// تشغيل الصوت عند أول ضغطة
+/* تشغيل الصوت عند أول نقرة */
 document.addEventListener("click",()=>{
   if(audio.paused){
     audio.volume=0.3;
@@ -146,7 +127,6 @@ document.addEventListener("click",()=>{
   }
 },{once:true});
 
-// زر التحكم بالصوت
 audioBtn.onclick=()=>{
   if(audio.paused){
     audio.play().catch(()=>{});
@@ -157,68 +137,27 @@ audioBtn.onclick=()=>{
   }
 };
 
-// طلب الكود
-getBtn.onclick=async()=>{
-  if(wait) return;
-
-  let number=document.getElementById("number").value.trim();
-  if(!number){
-    result.innerHTML="⚠️ أدخل رقم";
-    return;
-  }
-
-  result.innerHTML="⏳ جاري جلب الكود...";
+/* طلب الكود ونسخه مباشرة */
+getCodeBtn.onclick=async()=>{
+  const number = numberInput.value.trim();
+  if(!number) return;
 
   try{
-    let res=await fetch("https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number));
-    let data=await res.json();
+    const res = await fetch(`https://api-dataflowx.vercel.app/api/v1/contact/apii?number=${encodeURIComponent(number)}`);
+    const data = await res.json();
 
-    if(data.status){
-      lastCode=data.result.code;
-      result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>";
-      startCooldown();
-    } else {
-      result.innerHTML="❌ فشل جلب الكود";
+    if(data.status && data.result.code){
+      const code = data.result.code;
+      navigator.clipboard.writeText(code).catch(()=>{});
+      alert("✅ تم نسخ الكود تلقائياً");
+    }else{
+      alert("❌ فشل جلب الكود");
     }
+
   }catch{
-    result.innerHTML="❌ فشل الاتصال بالسيرفر";
+    alert("❌ خطأ في الاتصال بالـ API");
   }
 };
-
-// نسخ الكود
-copyBtn.onclick=()=>{
-  if(!lastCode){
-    alert("لا يوجد كود للنسخ");
-    return;
-  }
-  navigator.clipboard.writeText(lastCode).then(()=>{
-    alert("📋 تم نسخ الكود");
-  });
-};
-
-// تنظيف
-resetBtn.onclick=()=>{
-  document.getElementById("number").value="";
-  result.innerHTML="تم التنظيف";
-  document.getElementById("cooldown").innerHTML="";
-  lastCode="";
-};
-
-// انتظار قبل طلب جديد
-function startCooldown(){
-  let time=20;
-  let cooldown=document.getElementById("cooldown");
-  wait=true;
-  let interval=setInterval(()=>{
-    cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية";
-    time--;
-    if(time<0){
-      clearInterval(interval);
-      cooldown.innerHTML="يمكنك طلب كود جديد";
-      wait=false;
-    }
-  },1000);
-}
 </script>
 
 </body>
