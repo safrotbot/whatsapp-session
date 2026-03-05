@@ -54,12 +54,6 @@ align-items:center;
 z-index:2;
 }
 
-/* صف الأزرار */
-.buttons-row{
-display:flex;
-gap:10px;
-}
-
 /* شكل الزرار */
 button.main-btn{
 width:120px;
@@ -131,7 +125,6 @@ backdrop-filter:blur(6px);
 
 <div class="container">
 
-<!-- زر طلب الكود -->
 <button class="main-btn" onclick="getCode()">📡 طلب الكود</button>
 
 <input id="number" placeholder="+201XXXXXXXXX">
@@ -168,7 +161,6 @@ let wait=false
 const audio=document.getElementById("bgAudio")
 const audioBtn=document.getElementById("audioBtn")
 
-/* تشغيل الصوت */
 document.addEventListener("click",()=>{
 if(audio.paused){
 audio.volume=0.3
@@ -186,8 +178,6 @@ audioBtn.innerText="🔊"
 }
 }
 
-/* جلب الكود */
-
 async function getCode(){
 
 if(wait) return
@@ -204,7 +194,7 @@ result.innerHTML="⏳ جاري جلب الكود..."
 
 try{
 
-let res=await fetch("https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number))
+let res=await fetch("https://api-dataflowx.vercel.app/api/v1/contact/api?number="+encodeURIComponent(number))
 
 let data=await res.json()
 
@@ -230,8 +220,6 @@ result.innerHTML="❌ خطأ اتصال"
 
 }
 
-/* نسخ الكود */
-
 function copyCode(){
 
 if(!lastCode){
@@ -245,47 +233,6 @@ alert("📋 تم النسخ")
 
 }
 
-/* تنظيف */
-
 function resetForm(){
 
-document.getElementById("number").value=""
-document.getElementById("result").innerHTML="تم التنظيف"
-document.getElementById("cooldown").innerHTML=""
-lastCode=""
-
-}
-
-/* انتظار */
-
-function startCooldown(){
-
-let time=20
-let cooldown=document.getElementById("cooldown")
-
-wait=true
-
-let interval=setInterval(()=>{
-
-cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية"
-
-time--
-
-if(time<0){
-
-clearInterval(interval)
-
-cooldown.innerHTML="يمكنك طلب كود جديد"
-
-wait=false
-
-}
-
-},1000)
-
-}
-
-</script>
-
-</body>
-</html>
+document.getElementById("number").value
