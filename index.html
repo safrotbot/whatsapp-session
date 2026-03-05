@@ -1,243 +1,169 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♯ЅᗩFᏒOT꙯</title>
+
+<title>SAFROT BOT</title>
+
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
+
+body{
+margin:0;
+padding:0;
+height:100vh;
+font-family:sans-serif;
+display:flex;
+align-items:center;
+justify-content:center;
+background:url("background.jpg") center/cover no-repeat;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('background.jpg') no-repeat center center/cover;
-  position: relative;
+.container{
+background:rgba(0,0,0,0.55);
+backdrop-filter:blur(8px);
+padding:20px;
+border-radius:15px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+width:260px;
 }
 
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(3px);
-  z-index: 0;
+.smallbox{
+display:flex;
+gap:6px;
 }
 
-#logo {
-  position: absolute;
-  top: 25px;
-  font-size: 24px;
-  color: #fff;
-  font-weight: bold;
-  text-shadow: 0 0 10px rgba(255,255,255,0.4);
-  z-index: 2;
+button{
+border:none;
+border-radius:10px;
+padding:10px;
+cursor:pointer;
+color:white;
+background:rgba(0,0,0,0.4);
+font-size:14px;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-  z-index: 2;
+.small{
+width:120px;
 }
 
-/* الأزرار الكبيرة */
-button.main-btn {
-  width: 250px;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  transition: all .2s ease;
+.big{
+width:240px;
 }
 
-button.main-btn:hover {
-  background: rgba(0,0,0,0.55);
-  transform: translateY(-2px);
+button:hover{
+background:rgba(0,0,0,0.6);
 }
 
-/* الأزرار الصغيرة */
-button.small-btn {
-  width: 120px;
-  font-size: 14px;
-  margin: 0 3px;
-  background: rgba(0,0,0,0.3);
+input{
+width:220px;
+padding:10px;
+border-radius:8px;
+border:none;
+outline:none;
+text-align:center;
 }
 
-/* صندوق الرقم */
-#whatsappBox {
-  display: none;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  animation: fade .3s ease;
+#result{
+color:white;
+font-size:14px;
+text-align:center;
+word-wrap:break-word;
 }
 
-@keyframes fade {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-input {
-  width: 220px;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  text-align: center;
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  backdrop-filter: blur(8px);
-}
-
-input::placeholder { color: #ddd; }
-
-.response {
-  color: #fff;
-  text-align: center;
-  max-width: 260px;
-  word-wrap: break-word;
-  font-size: 14px;
-}
-
-/* أزرار صغيرة فوق بعض */
-.top-buttons {
-  display: flex;
-  gap: 5px;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-/* زر الصوت فوق زر القناة */
-#audioBtn {
-  width: 35px;
-  height: 35px;
-  font-size: 18px;
-  background: rgba(0,0,0,0.25);
-  border: none;
-  border-radius: 50%;
-  margin-top: 5px;
-}
 </style>
+
 </head>
+
 <body>
 
-<div id="logo">♯ЅᗩFᏒOT꙯</div>
+<audio id="sound" src="sound.mp3"></audio>
 
 <div class="container">
 
-  <!-- أزرار جلسة واتساب و QR جنب بعض -->
-  <div class="top-buttons">
-    <button class="small-btn" id="whatsappBtn">📲 جلسة واتساب</button>
-    <button class="small-btn" id="qrBtn">🔗 QR</button>
-  </div>
+<div class="smallbox">
+<button class="small" onclick="createSession()">جلسة</button>
+<button class="small" onclick="getQR()">QR</button>
+</div>
 
-  <!-- خانة الرقم + إنشاء الجلسة -->
-  <div id="whatsappBox">
-    <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
-    <button class="main-btn" id="createSession">إنشاء جلسة</button>
-    <div class="response" id="result"></div>
-  </div>
+<input id="number" placeholder="اكتب الرقم مع الكود">
 
-  <!-- أزرار خارجية -->
-  <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-    <button class="main-btn">المطور</button>
-  </a>
+<button class="big" onclick="playSound()">تشغيل الصوت</button>
 
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button class="main-btn">القناة</button>
-  </a>
+<button class="big" onclick="openDev()">شات المطور</button>
 
-  <!-- زر التحكم بالصوت فوق زر القناة -->
-  <button id="audioBtn">🔊</button>
+<button class="big" onclick="openChannel()">القناة</button>
+
+<div id="result"></div>
 
 </div>
 
-<!-- الصوت الخلفي -->
-<audio id="bgAudio" loop>
-  <source src="sound.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-const whatsappBtn = document.getElementById("whatsappBtn");
-const qrBtn = document.getElementById("qrBtn");
-const box = document.getElementById("whatsappBox");
-const createBtn = document.getElementById("createSession");
-const result = document.getElementById("result");
-const audio = document.getElementById("bgAudio");
-const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت بعد أول ضغطة */
-document.addEventListener("click", () => {
-  if(audio.paused){
-    audio.volume = 0.3;
-    audio.play().catch(()=>{});
-  }
-},{once:true});
+function playSound(){
+document.getElementById("sound").play()
+}
 
-/* زر التحكم بالصوت */
-audioBtn.onclick = () => {
-  if(audio.paused){
-    audio.play().catch(()=>{});
-    audioBtn.innerText = "🔇";
-  } else {
-    audio.pause();
-    audioBtn.innerText = "🔊";
-  }
-};
+function openDev(){
+window.open("https://wa.me/201115618853")
+}
 
-/* إظهار خانة الرقم */
-whatsappBtn.onclick = () => {
-  box.style.display = "flex";
-};
+function openChannel(){
+window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")
+}
 
-/* زر QR */
-qrBtn.onclick = async () => {
-  result.innerText = "⏳ جاري جلب QR...";
-  try {
-    const res = await fetch("https://rd-new-pair-web.vercel.app/qr");
-    const data = await res.json();
-    if(data.qr){
-      result.innerHTML = `✅ QR الجلسة:<br><img src="${data.qr}" alt="QR" style="width:150px;">`;
-    } else {
-      result.innerText = "❌ لم يتم الحصول على QR";
-    }
-  } catch(err){
-    result.innerText = "❌ فشل الاتصال بالسيرفر";
-  }
-};
+async function createSession(){
 
-/* إنشاء الجلسة */
-createBtn.onclick = async () => {
-  const number = document.getElementById("numberInput").value.trim();
-  if(!number){
-    result.innerText = "❌ اكتب رقم صحيح";
-    return;
-  }
-  result.innerText = "⏳ جاري إنشاء الجلسة...";
-  try {
-    const res = await fetch(`https://rd-new-pair-web.vercel.app/api/x9r7a3h19?number=${number}`);
-    const data = await res.json();
-    if(data.success){
-      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
-    } else {
-      result.innerText = data.message || "❌ حدث خطأ";
-    }
-  } catch(err){
-    result.innerText = "❌ فشل الاتصال بالسيرفر";
-  }
-};
+let number=document.getElementById("number").value
+let result=document.getElementById("result")
+
+if(!number){
+result.innerText="اكتب الرقم"
+return
+}
+
+result.innerText="جاري الاتصال..."
+
+try{
+
+let res=await fetch(`https://api-dataflowx.vercel.app/api/v1/contact/api?number=${number}`)
+let data=await res.json()
+
+result.innerText=JSON.stringify(data)
+
+}catch(e){
+
+result.innerText="فشل الاتصال بالسيرفر"
+
+}
+
+}
+
+async function getQR(){
+
+let result=document.getElementById("result")
+
+result.innerText="جاري جلب QR..."
+
+try{
+
+let res=await fetch(`https://api-dataflowx.vercel.app/api/v1/contact/api/qr`)
+let data=await res.json()
+
+result.innerText=JSON.stringify(data)
+
+}catch(e){
+
+result.innerText="فشل الاتصال بالسيرفر"
+
+}
+
+}
+
 </script>
 
 </body>
