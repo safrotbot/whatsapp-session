@@ -22,14 +22,29 @@ background:url("background.jpg") center/cover no-repeat;
 
 .container{
 background:rgba(0,0,0,0.55);
-backdrop-filter:blur(8px);
+backdrop-filter:blur(10px);
 padding:20px;
-border-radius:15px;
+border-radius:18px;
 display:flex;
 flex-direction:column;
 align-items:center;
 gap:10px;
-width:260px;
+width:270px;
+}
+
+.logo{
+font-size:22px;
+color:white;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.botimg{
+width:90px;
+height:90px;
+border-radius:50%;
+border:2px solid white;
+object-fit:cover;
 }
 
 .smallbox{
@@ -45,6 +60,12 @@ cursor:pointer;
 color:white;
 background:rgba(0,0,0,0.4);
 font-size:14px;
+transition:0.2s;
+}
+
+button:hover{
+background:rgba(0,0,0,0.7);
+transform:scale(1.03);
 }
 
 .small{
@@ -53,10 +74,6 @@ width:120px;
 
 .big{
 width:240px;
-}
-
-button:hover{
-background:rgba(0,0,0,0.6);
 }
 
 input{
@@ -85,18 +102,22 @@ word-wrap:break-word;
 
 <div class="container">
 
+<div class="logo">♯SAFROT BOT</div>
+
+<img src="bot.jpg" class="botimg">
+
 <div class="smallbox">
-<button class="small" onclick="createSession()">جلسة</button>
-<button class="small" onclick="getQR()">QR</button>
+<button class="small" onclick="createSession()">📲 جلسة</button>
+<button class="small" onclick="getQR()">🔗 QR</button>
 </div>
 
 <input id="number" placeholder="اكتب الرقم مع الكود">
 
-<button class="big" onclick="playSound()">تشغيل الصوت</button>
+<button class="big" onclick="playSound()">🔊 تشغيل الصوت</button>
 
-<button class="big" onclick="openDev()">شات المطور</button>
+<button class="big" onclick="openDev()">👨‍💻 شات المطور</button>
 
-<button class="big" onclick="openChannel()">القناة</button>
+<button class="big" onclick="openChannel()">📢 القناة</button>
 
 <div id="result"></div>
 
