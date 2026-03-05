@@ -5,97 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>♯ЅᗩFᏒOT꙯</title>
 <style>
-html,body{
-  margin:0;
-  padding:0;
-  height:100%;
-  font-family:'Segoe UI',sans-serif;
-  overflow:hidden;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
 }
-body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:url('background.jpg') no-repeat center center/cover;
-  position:relative;
-}
-body::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(3px);
-  z-index:0;
-}
-#logo{
-  position:absolute;
-  top:25px;
-  font-size:24px;
-  color:#fff;
-  font-weight:bold;
-  text-shadow:0 0 10px rgba(255,255,255,0.4);
-  z-index:2;
-}
-.container{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  align-items:center;
-  z-index:2;
-}
-button.main-btn{
-  width:250px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.35);
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-  transition:all .2s ease;
-}
-button.main-btn:hover{
-  background:rgba(0,0,0,0.55);
-  transform:translateY(-2px);
-}
-#whatsappBox{
-  display:none;
-  flex-direction:column;
-  gap:8px;
-  align-items:center;
-  animation:fade .3s ease;
-}
-@keyframes fade{
-  from{opacity:0;transform:translateY(-5px);}
-  to{opacity:1;transform:translateY(0);}
-}
-input{
-  width:220px;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  outline:none;
-  text-align:center;
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  backdrop-filter:blur(8px);
-}
-input::placeholder{ color:#ddd; }
-.response{ color:#fff; text-align:center; max-width:260px; word-wrap:break-word; font-size:14px; }
 
-/* أزرار صغيرة فوق القناة والمطور */
-.small-btn{
-  width:120px;
-  font-size:14px;
-  margin:3px;
-  background:rgba(0,0,0,0.3);
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('background.jpg') no-repeat center center/cover;
+  position: relative;
 }
-#audioBtn{
-  width:40px;
-  height:40px;
-  font-size:18px;
-  padding:0;
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(3px);
+  z-index: 0;
+}
+
+#logo {
+  position: absolute;
+  top: 25px;
+  font-size: 24px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255,255,255,0.4);
+  z-index: 2;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  z-index: 2;
+}
+
+/* الأزرار الكبيرة */
+button.main-btn {
+  width: 250px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all .2s ease;
+}
+
+button.main-btn:hover {
+  background: rgba(0,0,0,0.55);
+  transform: translateY(-2px);
+}
+
+/* الأزرار الصغيرة */
+button.small-btn {
+  width: 120px;
+  font-size: 14px;
+  margin: 0 3px;
+  background: rgba(0,0,0,0.3);
+}
+
+/* صندوق الرقم */
+#whatsappBox {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  animation: fade .3s ease;
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+input {
+  width: 220px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  text-align: center;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+input::placeholder { color: #ddd; }
+
+.response {
+  color: #fff;
+  text-align: center;
+  max-width: 260px;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+/* أزرار صغيرة فوق بعض */
+.top-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* زر الصوت فوق زر القناة */
+#audioBtn {
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+  background: rgba(0,0,0,0.25);
+  border: none;
+  border-radius: 50%;
+  margin-top: 5px;
 }
 </style>
 </head>
@@ -105,10 +137,10 @@ input::placeholder{ color:#ddd; }
 
 <div class="container">
 
-  <!-- أزرار صغيرة -->
-  <div style="display:flex; gap:5px;">
-    <button class="main-btn small-btn" id="whatsappBtn">📲 جلسة واتساب</button>
-    <button class="main-btn small-btn" id="qrBtn">🔗 QR</button>
+  <!-- أزرار جلسة واتساب و QR جنب بعض -->
+  <div class="top-buttons">
+    <button class="small-btn" id="whatsappBtn">📲 جلسة واتساب</button>
+    <button class="small-btn" id="qrBtn">🔗 QR</button>
   </div>
 
   <!-- خانة الرقم + إنشاء الجلسة -->
@@ -119,15 +151,16 @@ input::placeholder{ color:#ddd; }
   </div>
 
   <!-- أزرار خارجية -->
-  <div style="display:flex; gap:10px; margin-top:10px;">
-    <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-      <button class="main-btn small-btn">المطور</button>
-    </a>
-    <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-      <button class="main-btn small-btn">القناة</button>
-    </a>
-    <button class="main-btn" id="audioBtn">🔊</button>
-  </div>
+  <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
+    <button class="main-btn">المطور</button>
+  </a>
+
+  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+    <button class="main-btn">القناة</button>
+  </a>
+
+  <!-- زر التحكم بالصوت فوق زر القناة -->
+  <button id="audioBtn">🔊</button>
 
 </div>
 
@@ -146,67 +179,63 @@ const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
 
 /* تشغيل الصوت بعد أول ضغطة */
-document.addEventListener("click",()=>{
+document.addEventListener("click", () => {
   if(audio.paused){
-    audio.volume=0.3;
+    audio.volume = 0.3;
     audio.play().catch(()=>{});
   }
 },{once:true});
 
 /* زر التحكم بالصوت */
-audioBtn.onclick=()=>{
+audioBtn.onclick = () => {
   if(audio.paused){
     audio.play().catch(()=>{});
     audioBtn.innerText = "🔇";
-  }else{
+  } else {
     audio.pause();
     audioBtn.innerText = "🔊";
   }
 };
 
 /* إظهار خانة الرقم */
-whatsappBtn.onclick=()=>{
-  box.style.display="flex";
+whatsappBtn.onclick = () => {
+  box.style.display = "flex";
 };
 
-/* جلب QR */
-qrBtn.onclick=async()=>{
-  result.innerText="⏳ جاري جلب QR...";
-  try{
-    const res = await fetch("https://knight-bot-paircode.onrender.com/qr");
+/* زر QR */
+qrBtn.onclick = async () => {
+  result.innerText = "⏳ جاري جلب QR...";
+  try {
+    const res = await fetch("https://rd-new-pair-web.vercel.app/qr");
     const data = await res.json();
     if(data.qr){
-      result.innerHTML=`<img src="${data.qr}" style="width:200px;">`;
-    }else{
-      result.innerText="❌ فشل جلب QR";
+      result.innerHTML = `✅ QR الجلسة:<br><img src="${data.qr}" alt="QR" style="width:150px;">`;
+    } else {
+      result.innerText = "❌ لم يتم الحصول على QR";
     }
-  }catch(err){
-    result.innerText="❌ فشل الاتصال بالسيرفر";
+  } catch(err){
+    result.innerText = "❌ فشل الاتصال بالسيرفر";
   }
 };
 
-/* إنشاء الجلسة وإرسال الكود على نفس الرقم */
-createBtn.onclick=async()=>{
+/* إنشاء الجلسة */
+createBtn.onclick = async () => {
   const number = document.getElementById("numberInput").value.trim();
   if(!number){
-    result.innerText="❌ اكتب رقم صحيح";
+    result.innerText = "❌ اكتب رقم صحيح";
     return;
   }
-  result.innerText="⏳ جاري إنشاء الجلسة...";
-
-  try{
-    const res = await fetch(`https://knight-bot-paircode.onrender.com/pair?number=${number}`);
+  result.innerText = "⏳ جاري إنشاء الجلسة...";
+  try {
+    const res = await fetch(`https://rd-new-pair-web.vercel.app/api/x9r7a3h19?number=${number}`);
     const data = await res.json();
-
     if(data.success){
-      // إرسال الكود على نفس الرقم في واتساب
-      const waLink = `https://api.whatsapp.com/send?phone=${number}&text=كود الجلسة: ${encodeURIComponent(data.code||'غير متوفر')}`;
-      result.innerHTML=`✅ تم إنشاء الجلسة! <br><a href="${waLink}" target="_blank">اضغط هنا لإرسال الكود على واتساب</a>`;
+      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
     } else {
       result.innerText = data.message || "❌ حدث خطأ";
     }
-  }catch(err){
-    result.innerText="❌ فشل الاتصال بالسيرفر";
+  } catch(err){
+    result.innerText = "❌ فشل الاتصال بالسيرفر";
   }
 };
 </script>
