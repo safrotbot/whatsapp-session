@@ -13,7 +13,6 @@ html,body{
   font-family:'Segoe UI',sans-serif;
   overflow:hidden;
 }
-
 body{
   display:flex;
   justify-content:center;
@@ -21,7 +20,6 @@ body{
   background:url('background.jpg') no-repeat center center/cover;
   position:relative;
 }
-
 body::before{
   content:"";
   position:absolute;
@@ -30,16 +28,15 @@ body::before{
   backdrop-filter:blur(3px);
   z-index:0;
 }
-
 #logo{
   position:absolute;
   top:25px;
   font-size:24px;
   color:#fff;
   font-weight:bold;
+  text-shadow:0 0 10px rgba(255,255,255,0.4);
   z-index:2;
 }
-
 .container{
   display:flex;
   flex-direction:column;
@@ -47,17 +44,13 @@ body::before{
   align-items:center;
   z-index:2;
 }
-
-/* صف زرين جنب بعض */
-.row{
+.buttons-row{
   display:flex;
   gap:10px;
 }
-
-/* زر أساسي */
 button.main-btn{
-  width:200px;
-  padding:12px;
+  width:120px;
+  padding:10px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.2);
   background:rgba(0,0,0,0.35);
@@ -65,28 +58,12 @@ button.main-btn{
   font-size:16px;
   cursor:pointer;
   backdrop-filter:blur(10px);
-  transition:.2s;
+  transition:all .2s ease;
 }
-
 button.main-btn:hover{
   background:rgba(0,0,0,0.55);
   transform:translateY(-2px);
 }
-
-/* زر صغير QR */
-button.qr-btn{
-  width:50px;
-  padding:12px 0;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.35);
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-}
-
-/* صندوق الرقم */
 #whatsappBox{
   display:none;
   flex-direction:column;
@@ -94,12 +71,10 @@ button.qr-btn{
   align-items:center;
   animation:fade .3s ease;
 }
-
 @keyframes fade{
   from{opacity:0;transform:translateY(-5px);}
   to{opacity:1;transform:translateY(0);}
 }
-
 input{
   width:220px;
   padding:10px;
@@ -109,34 +84,32 @@ input{
   text-align:center;
   background:rgba(255,255,255,0.15);
   color:#fff;
+  backdrop-filter:blur(8px);
 }
-
+input::placeholder{
+  color:#ddd;
+}
 .response{
   color:#fff;
   margin-top:5px;
   text-align:center;
   max-width:260px;
+  word-wrap:break-word;
   font-size:14px;
 }
-
-/* حاوية القناة للصوت */
-.channel-wrapper{
-  position:relative;
-}
-
-/* زر الصوت */
 #audioBtn{
-  position:absolute;
-  top:-10px;
-  right:-10px;
   width:35px;
   height:35px;
+  font-size:18px;
+  position:absolute;
+  top:0;
+  right:50px;
   border-radius:50%;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.3);
+  background:rgba(0,0,0,0.25);
   color:#fff;
   cursor:pointer;
-  font-size:14px;
+  backdrop-filter:blur(6px);
 }
 </style>
 </head>
@@ -146,34 +119,34 @@ input{
 
 <div class="container">
 
-  <!-- جلسة + QR -->
-  <div class="row">
+  <!-- صف الأزرار الصغيرة -->
+  <div class="buttons-row">
     <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
-    <button class="qr-btn" id="qrBtn">🔳</button>
+    <button class="main-btn" id="qrBtn">🟢 QR واتساب</button>
   </div>
 
-  <!-- صندوق الإدخال -->
+  <!-- خانة الرقم + إنشاء الجلسة -->
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
     <button class="main-btn" id="createSession">إنشاء جلسة</button>
     <div class="response" id="result"></div>
   </div>
 
-  <!-- المطور -->
+  <!-- أزرار خارجية -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
 
-  <!-- القناة + الصوت -->
-  <div class="channel-wrapper">
-    <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-      <button class="main-btn">القناة</button>
-    </a>
-    <button id="audioBtn">🔊</button>
-  </div>
+  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+    <button class="main-btn">القناة</button>
+  </a>
+
+  <!-- زر التحكم بالصوت صغير فوق زر القناة -->
+  <button id="audioBtn">🔊</button>
 
 </div>
 
+<!-- الصوت الخلفي -->
 <audio id="bgAudio" loop>
   <source src="sound.mp3" type="audio/mpeg">
 </audio>
@@ -187,7 +160,7 @@ const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت */
+/* تشغيل الصوت بعد أول ضغطة */
 document.addEventListener("click",()=>{
   if(audio.paused){
     audio.volume=0.3;
@@ -206,21 +179,29 @@ audioBtn.onclick=()=>{
   }
 };
 
-/* عرض الصندوق */
-whatsappBtn.onclick=()=>{ box.style.display="flex"; };
+/* إظهار خانة الرقم */
+whatsappBtn.onclick=()=>{ 
+  box.style.display="flex";
+  result.innerHTML="";
+};
 
+/* زر QR */
 qrBtn.onclick=async()=>{
   box.style.display="flex";
   result.innerText="⏳ جاري تحميل QR...";
 
   try{
-    const res = await fetch("PUT-YOUR-API-QR-LINK");
+    const res = await fetch("https://knight-bot-paircode.onrender.com/qr");
     const data = await res.json();
 
     if(data.qr){
-      result.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.qr}" />`;
-    }else{
-      result.innerText="❌ فشل تحميل QR";
+      result.innerHTML = `
+        <img 
+        src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${data.qr}" 
+        style="margin-top:10px;border-radius:10px;" />
+      `;
+    } else {
+      result.innerText="❌ مفيش QR متاح حالياً";
     }
 
   }catch{
@@ -228,24 +209,28 @@ qrBtn.onclick=async()=>{
   }
 };
 
-/* إنشاء جلسة */
+/* إنشاء جلسة Pair Code */
 createBtn.onclick=async()=>{
   const number=document.getElementById("numberInput").value.trim();
+
   if(!number){
     result.innerText="❌ اكتب رقم صحيح";
     return;
   }
 
-  result.innerText="⏳ جاري إنشاء الجلسة...";
+  result.innerText="⏳ جاري إنشاء الكود...";
 
   try{
-    const res = await fetch(`PUT-YOUR-API-PAIR-LINK?number=${number}`);
+    const res = await fetch(`https://knight-bot-paircode.onrender.com/pair?number=${number}`);
     const data = await res.json();
 
-    if(data.success){
-      result.innerHTML=`✅ كود الجلسة:<br><b>${data.code}</b>`;
+    if(data.code){
+      result.innerHTML = `
+        ✅ كود الجلسة:<br>
+        <b style="font-size:18px">${data.code}</b>
+      `;
     }else{
-      result.innerText=data.message || "❌ حدث خطأ";
+      result.innerText=data.message || "❌ فشل إنشاء الكود";
     }
 
   }catch{
