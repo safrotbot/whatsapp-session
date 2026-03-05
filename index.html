@@ -1,175 +1,162 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SAFROT BOT</title>
+<title>♯ЅᗩFᏒOT꙯</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Arial;
+html,body{
+margin:0;
+padding:0;
+height:100%;
+font-family:'Segoe UI',sans-serif;
+overflow:hidden;
 }
 
 body{
-margin:0;
-height:100vh;
 display:flex;
-align-items:center;
 justify-content:center;
-background:url("background.jpg") center/cover no-repeat;
+align-items:center;
+background:url('background.jpg') no-repeat center center/cover;
+position:relative;
 }
 
+/* طبقة تغميق */
+body::before{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.45);
+backdrop-filter:blur(4px);
+z-index:0;
+}
+
+/* اللوجو */
+#logo{
+position:absolute;
+top:25px;
+font-size:24px;
+color:#fff;
+font-weight:bold;
+text-shadow:0 0 10px rgba(255,255,255,0.4);
+z-index:2;
+}
+
+/* الصندوق */
 .container{
-background:rgba(0,0,0,0.6);
-backdrop-filter:blur(12px);
-padding:30px;
-border-radius:20px;
-width:90%;
-max-width:420px;
-text-align:center;
-box-shadow:0 0 40px rgba(0,0,0,0.8);
-}
-
-.logo{
-width:90px;
-border-radius:50%;
-margin-bottom:10px;
-box-shadow:0 0 20px #000;
-}
-
-h1{
-margin:10px 0 20px 0;
-}
-
-input{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-margin-bottom:15px;
-background:#111;
-color:white;
-text-align:center;
-font-size:16px;
-}
-
-.buttons{
-display:flex;
-gap:8px;
-}
-
-button{
-border:none;
-padding:12px;
-border-radius:10px;
-font-size:15px;
-cursor:pointer;
-flex:1;
-transition:0.2s;
-}
-
-button:hover{
-transform:scale(1.05);
-}
-
-.get{
-background:#3b82f6;
-color:white;
-}
-
-.copy{
-background:#10b981;
-color:white;
-}
-
-.reset{
-background:#ef4444;
-color:white;
-}
-
-.extra{
-margin-top:15px;
 display:flex;
 flex-direction:column;
-gap:8px;
+gap:15px;
+align-items:center;
+z-index:2;
 }
 
-.extra button{
-background:#6366f1;
-color:white;
+/* صف الأزرار */
+.buttons-row{
+display:flex;
+gap:10px;
 }
 
-.result{
-margin-top:20px;
-background:#111;
-padding:12px;
-border-radius:10px;
-font-size:17px;
+/* شكل الزرار */
+button.main-btn{
+width:120px;
+padding:10px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.2);
+background:rgba(0,0,0,0.35);
+color:#fff;
+font-size:15px;
+cursor:pointer;
+backdrop-filter:blur(10px);
+transition:all .2s ease;
+}
+
+button.main-btn:hover{
+background:rgba(0,0,0,0.55);
+transform:translateY(-2px);
+}
+
+/* خانة الرقم */
+input{
+width:220px;
+padding:10px;
+border-radius:8px;
+border:none;
+outline:none;
+text-align:center;
+background:rgba(255,255,255,0.15);
+color:#fff;
+backdrop-filter:blur(8px);
+}
+
+input::placeholder{
+color:#ddd;
+}
+
+/* نتيجة */
+.response{
+color:#fff;
+margin-top:5px;
+text-align:center;
+max-width:260px;
 word-wrap:break-word;
-}
-
-.loader{
-margin-top:15px;
-display:none;
-}
-
-.cooldown{
-margin-top:10px;
 font-size:14px;
-color:#ccc;
+}
+
+/* زر الصوت */
+#audioBtn{
+width:35px;
+height:35px;
+font-size:18px;
+position:absolute;
+top:20px;
+right:20px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.3);
+background:rgba(0,0,0,0.25);
+color:#fff;
+cursor:pointer;
+backdrop-filter:blur(6px);
 }
 
 </style>
-
 </head>
 
 <body>
 
+<div id="logo">♯ЅᗩFᏒOT꙯</div>
+
 <div class="container">
 
-<img src="logo.png" class="logo">
-
-<h1>SAFROT BOT</h1>
+<!-- زر طلب الكود -->
+<button class="main-btn" onclick="getCode()">📡 طلب الكود</button>
 
 <input id="number" placeholder="+201XXXXXXXXX">
 
-<div class="buttons">
+<button class="main-btn" onclick="copyCode()">📋 نسخ الكود</button>
 
-<button class="get" onclick="getCode()">طلب الكود</button>
+<button class="main-btn" onclick="resetForm()">🧹 تنظيف</button>
 
-<button class="copy" onclick="copyCode()">نسخ</button>
+<a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
+<button class="main-btn">👨‍💻 المطور</button>
+</a>
 
-<button class="reset" onclick="resetForm()">تنظيف</button>
+<a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+<button class="main-btn">📢 القناة</button>
+</a>
 
-</div>
+<div class="response" id="result">لم يتم طلب كود بعد</div>
 
-<div class="extra">
-
-<button onclick="playSound()">🔊 تشغيل الصوت</button>
-
-<button onclick="openDev()">👨‍💻 شات المطور</button>
-
-<button onclick="openChannel()">📢 القناة</button>
+<div class="response" id="cooldown"></div>
 
 </div>
 
-<div class="loader" id="loader">
-⏳ جاري جلب الكود...
-</div>
+<button id="audioBtn">🔊</button>
 
-<div class="result" id="result">
-لم يتم طلب كود بعد
-</div>
-
-<div class="cooldown" id="cooldown"></div>
-
-</div>
-
-<audio id="sound">
+<audio id="bgAudio" loop>
 <source src="sound.mp3" type="audio/mpeg">
 </audio>
 
@@ -178,45 +165,48 @@ color:#ccc;
 let lastCode=""
 let wait=false
 
-function playSound(){
-document.getElementById("sound").play()
+const audio=document.getElementById("bgAudio")
+const audioBtn=document.getElementById("audioBtn")
+
+/* تشغيل الصوت */
+document.addEventListener("click",()=>{
+if(audio.paused){
+audio.volume=0.3
+audio.play().catch(()=>{})
+}
+},{once:true})
+
+audioBtn.onclick=()=>{
+if(audio.paused){
+audio.play().catch(()=>{})
+audioBtn.innerText="🔇"
+}else{
+audio.pause()
+audioBtn.innerText="🔊"
+}
 }
 
-function openDev(){
-window.open("https://wa.me/201115618853")
-}
-
-function openChannel(){
-window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")
-}
+/* جلب الكود */
 
 async function getCode(){
 
-if(wait){
-return
-}
+if(wait) return
 
 let number=document.getElementById("number").value
 let result=document.getElementById("result")
-let loader=document.getElementById("loader")
 
 if(!number){
-result.innerHTML="⚠️ أدخل رقم هاتف"
+result.innerHTML="⚠️ أدخل رقم"
 return
 }
 
-loader.style.display="block"
-result.innerHTML=""
+result.innerHTML="⏳ جاري جلب الكود..."
 
 try{
 
-let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number)
+let res=await fetch("https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number))
 
-let response=await fetch(url)
-
-let data=await response.json()
-
-loader.style.display="none"
+let data=await res.json()
 
 if(data.status){
 
@@ -232,14 +222,15 @@ result.innerHTML="❌ فشل جلب الكود"
 
 }
 
-}catch(err){
+}catch{
 
-loader.style.display="none"
 result.innerHTML="❌ خطأ اتصال"
 
 }
 
 }
+
+/* نسخ الكود */
 
 function copyCode(){
 
@@ -250,9 +241,11 @@ return
 
 navigator.clipboard.writeText(lastCode)
 
-alert("📋 تم نسخ الكود")
+alert("📋 تم النسخ")
 
 }
+
+/* تنظيف */
 
 function resetForm(){
 
@@ -262,6 +255,8 @@ document.getElementById("cooldown").innerHTML=""
 lastCode=""
 
 }
+
+/* انتظار */
 
 function startCooldown(){
 
