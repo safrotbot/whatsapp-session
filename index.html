@@ -84,13 +84,18 @@ input{
 input::placeholder{ color:#ddd; }
 .response{ color:#fff; text-align:center; max-width:260px; word-wrap:break-word; font-size:14px; }
 
-/* أزرار صغيرة فوق الأزرار الكبيرة */
+/* أزرار صغيرة فوق القناة والمطور */
 .small-btn{
   width:120px;
   font-size:14px;
   margin:3px;
   background:rgba(0,0,0,0.3);
-  border-radius:8px;
+}
+#audioBtn{
+  width:40px;
+  height:40px;
+  font-size:18px;
+  padding:0;
 }
 </style>
 </head>
@@ -100,7 +105,7 @@ input::placeholder{ color:#ddd; }
 
 <div class="container">
 
-  <!-- أزرار صغيرة فوق القناة والمطور -->
+  <!-- أزرار صغيرة -->
   <div style="display:flex; gap:5px;">
     <button class="main-btn small-btn" id="whatsappBtn">📲 جلسة واتساب</button>
     <button class="main-btn small-btn" id="qrBtn">🔗 QR</button>
@@ -113,18 +118,18 @@ input::placeholder{ color:#ddd; }
     <div class="response" id="result"></div>
   </div>
 
-  <!-- أزرار كبيرة للمطور والقناة -->
-  <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-    <button class="main-btn">المطور</button>
-  </a>
+  <!-- أزرار خارجية -->
+  <div style="display:flex; gap:10px; margin-top:10px;">
+    <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
+      <button class="main-btn small-btn">المطور</button>
+    </a>
+    <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+      <button class="main-btn small-btn">القناة</button>
+    </a>
+    <button class="main-btn" id="audioBtn">🔊</button>
+  </div>
 
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank" style="position:relative;">
-    <button class="main-btn">القناة</button>
-    <!-- زر الصوت صغير فوق زر القناة -->
-    <button class="main-btn small-btn" id="audioBtn" style="position:absolute; top:-30px; right:5px; width:40px; font-size:14px;">🔊</button>
-  </a>
-
-</div> <!-- نهاية الحاوية -->
+</div>
 
 <!-- الصوت الخلفي -->
 <audio id="bgAudio" loop>
@@ -159,42 +164,46 @@ audioBtn.onclick=()=>{
   }
 };
 
-/* إظهار خانة الرقم عند الضغط على زر الجلسة */
+/* إظهار خانة الرقم */
 whatsappBtn.onclick=()=>{
   box.style.display="flex";
 };
 
-/* إنشاء الجلسة */
-createBtn.onclick=async()=>{
-  const number=document.getElementById("numberInput").value.trim();
-  if(!number){
-    result.innerText="❌ اكتب رقم صحيح";
-    return;
-  }
-  result.innerText="⏳ جاري الاتصال...";
+/* جلب QR */
+qrBtn.onclick=async()=>{
+  result.innerText="⏳ جاري جلب QR...";
   try{
-    const res = await fetch(`https://knight-bot-paircode.onrender.com/pair?number=${number}`);
+    const res = await fetch("https://knight-bot-paircode.onrender.com/qr");
     const data = await res.json();
-    if(data.success){
-      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
-    } else {
-      result.innerText = data.message || "❌ حدث خطأ";
+    if(data.qr){
+      result.innerHTML=`<img src="${data.qr}" style="width:200px;">`;
+    }else{
+      result.innerText="❌ فشل جلب QR";
     }
   }catch(err){
     result.innerText="❌ فشل الاتصال بالسيرفر";
   }
 };
 
-/* عرض QR عند الضغط على زر QR */
-qrBtn.onclick=async()=>{
-  result.innerText="⏳ جاري جلب QR...";
+/* إنشاء الجلسة وإرسال الكود على نفس الرقم */
+createBtn.onclick=async()=>{
+  const number = document.getElementById("numberInput").value.trim();
+  if(!number){
+    result.innerText="❌ اكتب رقم صحيح";
+    return;
+  }
+  result.innerText="⏳ جاري إنشاء الجلسة...";
+
   try{
-    const res = await fetch(`https://knight-bot-paircode.onrender.com/qr`);
+    const res = await fetch(`https://knight-bot-paircode.onrender.com/pair?number=${number}`);
     const data = await res.json();
-    if(data.qr){
-      result.innerHTML = `<img src="${data.qr}" alt="QR Code" style="width:180px; margin-top:5px;">`;
-    }else{
-      result.innerText="❌ لم يتم العثور على QR";
+
+    if(data.success){
+      // إرسال الكود على نفس الرقم في واتساب
+      const waLink = `https://api.whatsapp.com/send?phone=${number}&text=كود الجلسة: ${encodeURIComponent(data.code||'غير متوفر')}`;
+      result.innerHTML=`✅ تم إنشاء الجلسة! <br><a href="${waLink}" target="_blank">اضغط هنا لإرسال الكود على واتساب</a>`;
+    } else {
+      result.innerText = data.message || "❌ حدث خطأ";
     }
   }catch(err){
     result.innerText="❌ فشل الاتصال بالسيرفر";
