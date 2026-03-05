@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>♯ЅᗩFᏒOT꙯</title>
 
 <style>
@@ -49,35 +48,35 @@ z-index:2;
 .container{
 display:flex;
 flex-direction:column;
-gap:15px;
+gap:12px;
 align-items:center;
 z-index:2;
 }
 
-/* شكل الزرار */
+/* شكل الزر */
 button.main-btn{
-width:120px;
-padding:10px;
+width:200px;
+padding:12px;
 border-radius:12px;
-border:1px solid rgba(255,255,255,0.2);
-background:rgba(0,0,0,0.35);
+border:1px solid rgba(255,255,255,0.25);
+background:rgba(255,255,255,0.08);
 color:#fff;
-font-size:15px;
+font-size:16px;
 cursor:pointer;
-backdrop-filter:blur(10px);
+backdrop-filter:blur(12px);
 transition:all .2s ease;
 }
 
 button.main-btn:hover{
-background:rgba(0,0,0,0.55);
+background:rgba(255,255,255,0.18);
 transform:translateY(-2px);
 }
 
 /* خانة الرقم */
 input{
-width:220px;
+width:200px;
 padding:10px;
-border-radius:8px;
+border-radius:10px;
 border:none;
 outline:none;
 text-align:center;
@@ -125,13 +124,19 @@ backdrop-filter:blur(6px);
 
 <div class="container">
 
-<button class="main-btn" onclick="getCode()">📡 طلب الكود</button>
+<button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
 
-<input id="number" placeholder="+201XXXXXXXXX">
+<button class="main-btn" id="qrBtn">🟢 QR واتساب</button>
 
-<button class="main-btn" onclick="copyCode()">📋 نسخ الكود</button>
+<div id="whatsappBox" style="display:none;flex-direction:column;gap:10px;align-items:center;">
 
-<button class="main-btn" onclick="resetForm()">🧹 تنظيف</button>
+<input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
+
+<button class="main-btn" id="createSession">إنشاء جلسة</button>
+
+<div class="response" id="result"></div>
+
+</div>
 
 <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
 <button class="main-btn">👨‍💻 المطور</button>
@@ -140,10 +145,6 @@ backdrop-filter:blur(6px);
 <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
 <button class="main-btn">📢 القناة</button>
 </a>
-
-<div class="response" id="result">لم يتم طلب كود بعد</div>
-
-<div class="response" id="cooldown"></div>
 
 </div>
 
@@ -155,12 +156,15 @@ backdrop-filter:blur(6px);
 
 <script>
 
-let lastCode=""
-let wait=false
-
+const whatsappBtn=document.getElementById("whatsappBtn")
+const qrBtn=document.getElementById("qrBtn")
+const box=document.getElementById("whatsappBox")
+const createBtn=document.getElementById("createSession")
+const result=document.getElementById("result")
 const audio=document.getElementById("bgAudio")
 const audioBtn=document.getElementById("audioBtn")
 
+/* تشغيل الصوت */
 document.addEventListener("click",()=>{
 if(audio.paused){
 audio.volume=0.3
@@ -178,61 +182,84 @@ audioBtn.innerText="🔊"
 }
 }
 
-async function getCode(){
-
-if(wait) return
-
-let number=document.getElementById("number").value
-let result=document.getElementById("result")
-
-if(!number){
-result.innerHTML="⚠️ أدخل رقم"
-return
+/* زر الجلسة */
+whatsappBtn.onclick=()=>{
+box.style.display="flex"
+result.innerHTML=""
 }
 
-result.innerHTML="⏳ جاري جلب الكود..."
+/* QR */
+
+qrBtn.onclick=async()=>{
+
+box.style.display="flex"
+result.innerText="⏳ جاري تحميل QR..."
 
 try{
 
-let res=await fetch("https://api-dataflowx.vercel.app/api/v1/contact/api?number="+encodeURIComponent(number))
+const res=await fetch("https://knight-bot-paircode.onrender.com/qr")
+const data=await res.json()
 
-let data=await res.json()
+if(data.qr){
 
-if(data.status){
-
-lastCode=data.result.code
-
-result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>"
-
-startCooldown()
+result.innerHTML=`
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${data.qr}" style="margin-top:10px;border-radius:10px;">
+`
 
 }else{
 
-result.innerHTML="❌ فشل جلب الكود"
+result.innerText="❌ مفيش QR متاح"
 
 }
 
 }catch{
 
-result.innerHTML="❌ خطأ اتصال"
+result.innerText="❌ فشل الاتصال بالسيرفر"
 
 }
 
 }
 
-function copyCode(){
+/* إنشاء جلسة */
 
-if(!lastCode){
-alert("لا يوجد كود")
+createBtn.onclick=async()=>{
+
+const number=document.getElementById("numberInput").value.trim()
+
+if(!number){
+result.innerText="❌ اكتب رقم"
 return
 }
 
-navigator.clipboard.writeText(lastCode)
+result.innerText="⏳ جاري إنشاء الكود..."
 
-alert("📋 تم النسخ")
+try{
+
+const res=await fetch(`https://knight-bot-paircode.onrender.com/pair?number=${number}`)
+const data=await res.json()
+
+if(data.code){
+
+result.innerHTML=`
+✅ كود الجلسة<br>
+<b style="font-size:20px">${data.code}</b>
+`
+
+}else{
+
+result.innerText="❌ فشل إنشاء الكود"
 
 }
 
-function resetForm(){
+}catch{
 
-document.getElementById("number").value
+result.innerText="❌ خطأ اتصال"
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
