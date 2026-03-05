@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact Code Generator</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+header{
+width:100%;
+padding:20px;
+text-align:center;
+background:#020617;
+border-bottom:1px solid #1e293b;
+}
+
+h1{
+margin:0;
+font-size:26px;
+}
+
+.container{
+margin-top:50px;
+background:#020617;
+padding:30px;
+border-radius:12px;
+width:90%;
+max-width:500px;
+box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+
+label{
+font-size:18px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+background:#1e293b;
+color:white;
+font-size:16px;
+}
+
+.buttons{
+margin-top:20px;
+display:flex;
+gap:10px;
+}
+
+button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.get{
+background:#3b82f6;
+color:white;
+}
+
+.copy{
+background:#10b981;
+color:white;
+}
+
+.reset{
+background:#ef4444;
+color:white;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+.result{
+margin-top:25px;
+background:#1e293b;
+padding:15px;
+border-radius:8px;
+text-align:center;
+font-size:18px;
+}
+
+.loader{
+display:none;
+text-align:center;
+margin-top:20px;
+}
+
+.cooldown{
+margin-top:10px;
+font-size:14px;
+color:#94a3b8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>📡 Contact Code Generator</h1>
+</header>
+
+<div class="container">
+
+<label>أدخل رقم الهاتف</label>
+
+<input id="number" placeholder="+963XXXXXXXXX">
+
+<div class="buttons">
+
+<button class="get" onclick="getCode()">طلب الكود</button>
+
+<button class="copy" onclick="copyCode()">نسخ الكود</button>
+
+<button class="reset" onclick="resetForm()">تنظيف</button>
+
+</div>
+
+<div class="loader" id="loader">
+⏳ جاري جلب الكود...
+</div>
+
+<div class="result" id="result">
+لم يتم طلب كود بعد
+</div>
+
+<div class="cooldown" id="cooldown"></div>
+
+</div>
+
+<script>
+
+let lastCode=""
+let wait=false
+
+async function getCode(){
+
+if(wait){
+return
+}
+
+let number=document.getElementById("number").value
+let result=document.getElementById("result")
+let loader=document.getElementById("loader")
+
+if(!number){
+result.innerHTML="⚠️ أدخل رقم هاتف"
+return
+}
+
+loader.style.display="block"
+result.innerHTML=""
+
+try{
+
+let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number)
+
+let response=await fetch(url)
+
+let data=await response.json()
+
+loader.style.display="none"
+
+if(data.status){
+
+lastCode=data.result.code
+
+result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>"
+
+startCooldown()
+
+}else{
+
+result.innerHTML="❌ فشل جلب الكود"
+
+}
+
+}catch(err){
+
+loader.style.display="none"
+result.innerHTML="❌ خطأ اتصال"
+
+}
+
+}
+
+function copyCode(){
+
+if(!lastCode){
+alert("لا يوجد كود للنسخ")
+return
+}
+
+if(navigator.clipboard){
+
+navigator.clipboard.writeText(lastCode)
+
+.then(()=>{
+alert("📋 تم نسخ الكود")
+})
+
+.catch(()=>{
+fallbackCopy()
+})
+
+}else{
+
+fallbackCopy()
+
+}
+
+}
+
+function fallbackCopy(){
+
+let textarea=document.createElement("textarea")
+
+textarea.value=lastCode
+
+document.body.appendChild(textarea)
+
+textarea.select()
+
+document.execCommand("copy")
+
+document.body.removeChild(textarea)
+
+alert("📋 تم نسخ الكود")
+
+}
+
+function resetForm(){
+
+document.getElementById("number").value=""
+document.getElementById("result").innerHTML="تم التنظيف"
+document.getElementById("cooldown").innerHTML=""
+lastCode=""
+
+}
+
+function startCooldown(){
+
+let time=20
+let cooldown=document.getElementById("cooldown")
+
+wait=true
+
+let interval=setInterval(()=>{
+
+cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية"
+
+time--
+
+if(time<0){
+
+clearInterval(interval)
+
+cooldown.innerHTML="يمكنك طلب كود جديد"
+
+wait=false
+
+}
+
+},1000)
+
+}
+
+</script>
+
+</body>
+</html>
