@@ -22,7 +22,6 @@ body{
   position:relative;
 }
 
-/* طبقة تغميق خفيفة */
 body::before{
   content:"";
   position:absolute;
@@ -32,18 +31,15 @@ body::before{
   z-index:0;
 }
 
-/* الشعار */
 #logo{
   position:absolute;
   top:25px;
   font-size:24px;
   color:#fff;
   font-weight:bold;
-  text-shadow:0 0 10px rgba(255,255,255,0.4);
   z-index:2;
 }
 
-/* الحاوية */
 .container{
   display:flex;
   flex-direction:column;
@@ -52,9 +48,15 @@ body::before{
   z-index:2;
 }
 
-/* أزرار زجاجية شفافة */
+/* صف زرين جنب بعض */
+.row{
+  display:flex;
+  gap:10px;
+}
+
+/* زر أساسي */
 button.main-btn{
-  width:250px;
+  width:200px;
   padding:12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.2);
@@ -63,12 +65,25 @@ button.main-btn{
   font-size:16px;
   cursor:pointer;
   backdrop-filter:blur(10px);
-  transition:all .2s ease;
+  transition:.2s;
 }
 
 button.main-btn:hover{
   background:rgba(0,0,0,0.55);
   transform:translateY(-2px);
+}
+
+/* زر صغير QR */
+button.qr-btn{
+  width:50px;
+  padding:12px 0;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.35);
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
 }
 
 /* صندوق الرقم */
@@ -94,11 +109,6 @@ input{
   text-align:center;
   background:rgba(255,255,255,0.15);
   color:#fff;
-  backdrop-filter:blur(8px);
-}
-
-input::placeholder{
-  color:#ddd;
 }
 
 .response{
@@ -106,7 +116,26 @@ input::placeholder{
   margin-top:5px;
   text-align:center;
   max-width:260px;
-  word-wrap:break-word;
+  font-size:14px;
+}
+
+/* حاوية القناة للصوت */
+.channel-wrapper{
+  position:relative;
+}
+
+/* زر الصوت */
+#audioBtn{
+  position:absolute;
+  top:-10px;
+  right:-10px;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  cursor:pointer;
   font-size:14px;
 }
 </style>
@@ -117,44 +146,48 @@ input::placeholder{
 
 <div class="container">
 
-  <!-- زر جلسة واتساب -->
-  <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
+  <!-- جلسة + QR -->
+  <div class="row">
+    <button class="main-btn" id="whatsappBtn">📲 جلسة واتساب</button>
+    <button class="qr-btn" id="qrBtn">🔳</button>
+  </div>
 
-  <!-- خانة الرقم + إنشاء الجلسة -->
+  <!-- صندوق الإدخال -->
   <div id="whatsappBox">
     <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
     <button class="main-btn" id="createSession">إنشاء جلسة</button>
     <div class="response" id="result"></div>
   </div>
 
-  <!-- أزرار خارجية -->
+  <!-- المطور -->
   <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
     <button class="main-btn">المطور</button>
   </a>
 
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button class="main-btn">القناة</button>
-  </a>
-
-  <!-- زر التحكم بالصوت صغير -->
-  <button class="main-btn" id="audioBtn">🔊</button>
+  <!-- القناة + الصوت -->
+  <div class="channel-wrapper">
+    <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
+      <button class="main-btn">القناة</button>
+    </a>
+    <button id="audioBtn">🔊</button>
+  </div>
 
 </div>
 
-<!-- الصوت الخلفي -->
 <audio id="bgAudio" loop>
   <source src="sound.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const whatsappBtn = document.getElementById("whatsappBtn");
+const qrBtn = document.getElementById("qrBtn");
 const box = document.getElementById("whatsappBox");
 const createBtn = document.getElementById("createSession");
 const result = document.getElementById("result");
 const audio = document.getElementById("bgAudio");
 const audioBtn = document.getElementById("audioBtn");
 
-/* تشغيل الصوت بعد أول ضغطة */
+/* تشغيل الصوت */
 document.addEventListener("click",()=>{
   if(audio.paused){
     audio.volume=0.3;
@@ -162,41 +195,60 @@ document.addEventListener("click",()=>{
   }
 },{once:true});
 
-/* زر التحكم بالصوت */
+/* زر الصوت */
 audioBtn.onclick=()=>{
   if(audio.paused){
     audio.play().catch(()=>{});
-    audioBtn.innerText = "🔇"; // تغير الايقونة
+    audioBtn.innerText="🔇";
   }else{
     audio.pause();
-    audioBtn.innerText = "🔊";
+    audioBtn.innerText="🔊";
   }
 };
 
-/* إظهار خانة الرقم */
-whatsappBtn.onclick=()=>{
+/* عرض الصندوق */
+whatsappBtn.onclick=()=>{ box.style.display="flex"; };
+
+qrBtn.onclick=async()=>{
   box.style.display="flex";
+  result.innerText="⏳ جاري تحميل QR...";
+
+  try{
+    const res = await fetch("PUT-YOUR-API-QR-LINK");
+    const data = await res.json();
+
+    if(data.qr){
+      result.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data.qr}" />`;
+    }else{
+      result.innerText="❌ فشل تحميل QR";
+    }
+
+  }catch{
+    result.innerText="❌ فشل الاتصال بالسيرفر";
+  }
 };
 
-/* إنشاء الجلسة */
+/* إنشاء جلسة */
 createBtn.onclick=async()=>{
   const number=document.getElementById("numberInput").value.trim();
   if(!number){
     result.innerText="❌ اكتب رقم صحيح";
     return;
   }
-  result.innerText="⏳ جاري الاتصال...";
+
+  result.innerText="⏳ جاري إنشاء الجلسة...";
 
   try{
-    const res = await fetch(`/api/whatsapp?number=${number}`);
+    const res = await fetch(`PUT-YOUR-API-PAIR-LINK?number=${number}`);
     const data = await res.json();
 
     if(data.success){
-      result.innerHTML = `✅ كود الجلسة للرقم ${number}:<br><b>${data.code || "غير متوفر"}</b>`;
-    } else {
-      result.innerText = data.message || "❌ حدث خطأ";
+      result.innerHTML=`✅ كود الجلسة:<br><b>${data.code}</b>`;
+    }else{
+      result.innerText=data.message || "❌ حدث خطأ";
     }
-  }catch(err){
+
+  }catch{
     result.innerText="❌ فشل الاتصال بالسيرفر";
   }
 };
