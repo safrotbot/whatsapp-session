@@ -5,71 +5,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contact Code Generator</title>
+<title>SAFROT BOT</title>
 
 <style>
 
+*{
+box-sizing:border-box;
+font-family:Arial;
+}
+
 body{
 margin:0;
-font-family:Arial;
-background:#0f172a;
-color:white;
+height:100vh;
 display:flex;
-flex-direction:column;
 align-items:center;
-}
-
-header{
-width:100%;
-padding:20px;
-text-align:center;
-background:#020617;
-border-bottom:1px solid #1e293b;
-}
-
-h1{
-margin:0;
-font-size:26px;
+justify-content:center;
+background:url("background.jpg") center/cover no-repeat;
 }
 
 .container{
-margin-top:50px;
-background:#020617;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
 padding:30px;
-border-radius:12px;
+border-radius:20px;
 width:90%;
-max-width:500px;
-box-shadow:0 0 25px rgba(0,0,0,0.6);
+max-width:420px;
+text-align:center;
+box-shadow:0 0 40px rgba(0,0,0,0.8);
 }
 
-label{
-font-size:18px;
+.logo{
+width:90px;
+border-radius:50%;
+margin-bottom:10px;
+box-shadow:0 0 20px #000;
+}
+
+h1{
+margin:10px 0 20px 0;
 }
 
 input{
 width:100%;
 padding:12px;
-margin-top:10px;
 border:none;
-border-radius:8px;
-background:#1e293b;
+border-radius:10px;
+margin-bottom:15px;
+background:#111;
 color:white;
+text-align:center;
 font-size:16px;
 }
 
 .buttons{
-margin-top:20px;
 display:flex;
-gap:10px;
+gap:8px;
 }
 
 button{
-flex:1;
-padding:12px;
 border:none;
-border-radius:8px;
-font-size:16px;
+padding:12px;
+border-radius:10px;
+font-size:15px;
 cursor:pointer;
+flex:1;
+transition:0.2s;
+}
+
+button:hover{
+transform:scale(1.05);
 }
 
 .get{
@@ -87,29 +91,36 @@ background:#ef4444;
 color:white;
 }
 
-button:hover{
-opacity:0.9;
+.extra{
+margin-top:15px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.extra button{
+background:#6366f1;
+color:white;
 }
 
 .result{
-margin-top:25px;
-background:#1e293b;
-padding:15px;
-border-radius:8px;
-text-align:center;
-font-size:18px;
+margin-top:20px;
+background:#111;
+padding:12px;
+border-radius:10px;
+font-size:17px;
+word-wrap:break-word;
 }
 
 .loader{
+margin-top:15px;
 display:none;
-text-align:center;
-margin-top:20px;
 }
 
 .cooldown{
 margin-top:10px;
 font-size:14px;
-color:#94a3b8;
+color:#ccc;
 }
 
 </style>
@@ -118,23 +129,31 @@ color:#94a3b8;
 
 <body>
 
-<header>
-<h1>📡 Contact Code Generator</h1>
-</header>
-
 <div class="container">
 
-<label>أدخل رقم الهاتف</label>
+<img src="logo.png" class="logo">
 
-<input id="number" placeholder="+963XXXXXXXXX">
+<h1>SAFROT BOT</h1>
+
+<input id="number" placeholder="+201XXXXXXXXX">
 
 <div class="buttons">
 
 <button class="get" onclick="getCode()">طلب الكود</button>
 
-<button class="copy" onclick="copyCode()">نسخ الكود</button>
+<button class="copy" onclick="copyCode()">نسخ</button>
 
 <button class="reset" onclick="resetForm()">تنظيف</button>
+
+</div>
+
+<div class="extra">
+
+<button onclick="playSound()">🔊 تشغيل الصوت</button>
+
+<button onclick="openDev()">👨‍💻 شات المطور</button>
+
+<button onclick="openChannel()">📢 القناة</button>
 
 </div>
 
@@ -150,10 +169,26 @@ color:#94a3b8;
 
 </div>
 
+<audio id="sound">
+<source src="sound.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 
 let lastCode=""
 let wait=false
+
+function playSound(){
+document.getElementById("sound").play()
+}
+
+function openDev(){
+window.open("https://wa.me/201115618853")
+}
+
+function openChannel(){
+window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")
+}
 
 async function getCode(){
 
@@ -209,43 +244,11 @@ result.innerHTML="❌ خطأ اتصال"
 function copyCode(){
 
 if(!lastCode){
-alert("لا يوجد كود للنسخ")
+alert("لا يوجد كود")
 return
 }
 
-if(navigator.clipboard){
-
 navigator.clipboard.writeText(lastCode)
-
-.then(()=>{
-alert("📋 تم نسخ الكود")
-})
-
-.catch(()=>{
-fallbackCopy()
-})
-
-}else{
-
-fallbackCopy()
-
-}
-
-}
-
-function fallbackCopy(){
-
-let textarea=document.createElement("textarea")
-
-textarea.value=lastCode
-
-document.body.appendChild(textarea)
-
-textarea.select()
-
-document.execCommand("copy")
-
-document.body.removeChild(textarea)
 
 alert("📋 تم نسخ الكود")
 
