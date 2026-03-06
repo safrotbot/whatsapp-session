@@ -185,7 +185,7 @@ async function copyCode(){
   let number=document.getElementById("number").value;
   if(!number){alert("⚠️ أدخل رقم الهاتف أولاً"); return;}
   try{
-    let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number);
+    let url="https://api-dataflowx.vercel.app/api/v1/contact/i?number="+encodeURIComponent(number);
     let response=await fetch(url);
     let data=await response.json();
     if(data.status){
