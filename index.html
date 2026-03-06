@@ -78,26 +78,18 @@ button{
   cursor:pointer;
   flex:1;
   transition:0.2s;
-  background:rgba(255,255,255,0.05); /* شفاف جدًا */
+  background:rgba(255,255,255,0.05);
   color:white;
 }
 
 button:hover{
   transform:scale(1.05);
-  box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1; /* توهج عند hover */
+  box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1;
 }
 
-.get{
-  background:rgba(59,130,246,0.2);
-}
-
-.copy{
-  background:rgba(16,185,129,0.2);
-}
-
-.reset{
-  background:rgba(239,68,68,0.2);
-}
+.get{background:rgba(59,130,246,0.2);}
+.copy{background:rgba(16,185,129,0.2);}
+.reset{background:rgba(239,68,68,0.2);}
 
 .extra{
   display:flex;
@@ -107,16 +99,19 @@ button:hover{
 }
 
 .extra button{
-  background:rgba(255,255,255,0.1); /* شفاف */
+  background:rgba(255,255,255,0.1);
   border-radius:20px;
   padding:10px 14px;
   backdrop-filter:blur(10px);
   color:white;
   transition:0.2s;
+  animation:neonGlow 1.5s ease-in-out infinite alternate;
 }
-.extra button:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1;
+
+@keyframes neonGlow{
+0%{box-shadow:0 0 5px #3b82f6,0 0 10px #6366f1,0 0 20px #3b82f6;}
+50%{box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1,0 0 30px #3b82f6;}
+100%{box-shadow:0 0 5px #3b82f6,0 0 10px #6366f1,0 0 20px #3b82f6;}
 }
 
 .result{
@@ -129,17 +124,8 @@ button:hover{
   color:white;
 }
 
-.loader{
-  margin-top:15px;
-  display:none;
-  color:white;
-}
-
-.cooldown{
-  margin-top:10px;
-  font-size:14px;
-  color:#ccc;
-}
+.loader{margin-top:15px;display:none;color:white;}
+.cooldown{margin-top:10px;font-size:14px;color:#ccc;}
 </style>
 </head>
 <body>
@@ -163,140 +149,70 @@ button:hover{
 <button class="reset" onclick="resetForm()">تنظيف</button>
 </div>
 
-<div class="loader" id="loader">
-⏳ جاري جلب الكود...
-</div>
-
-<div class="result" id="result">
-لم يتم طلب كود بعد
-</div>
-
+<div class="loader" id="loader">⏳ جاري جلب الكود...</div>
+<div class="result" id="result">لم يتم طلب كود بعد</div>
 <div class="cooldown" id="cooldown"></div>
 
 </div>
 
-<audio id="sound">
-<source src="sound.mp3" type="audio/mpeg">
-</audio>
+<audio id="sound"><source src="sound.mp3" type="audio/mpeg"></audio>
 
 <script>
+let lastCode="",wait=false;
 
-let lastCode=""
-let wait=false
-
-function playSound(){
-document.getElementById("sound").play()
-}
-
-function openDev(){
-window.open("https://wa.me/201115618853")
-}
-
-function openChannel(){
-window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")
-}
+function playSound(){document.getElementById("sound").play();}
+function openDev(){window.open("https://wa.me/201115618853");}
+function openChannel(){window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46");}
 
 async function getCode(){
-
-if(wait){
-return
+  if(wait){return;}
+  let number=document.getElementById("number").value;
+  let result=document.getElementById("result");
+  let loader=document.getElementById("loader");
+  if(!number){result.innerHTML="⚠️ أدخل رقم هاتف";return;}
+  loader.style.display="block"; result.innerHTML="";
+  try{
+    let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number);
+    let response=await fetch(url);
+    let data=await response.json();
+    loader.style.display="none";
+    if(data.status){lastCode=data.result.code; result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>"; startCooldown();}
+    else{result.innerHTML="❌ فشل جلب الكود";}
+  }catch(err){loader.style.display="none"; result.innerHTML="❌ خطأ اتصال";}
 }
 
-let number=document.getElementById("number").value
-let result=document.getElementById("result")
-let loader=document.getElementById("loader")
-
-if(!number){
-result.innerHTML="⚠️ أدخل رقم هاتف"
-return
-}
-
-loader.style.display="block"
-result.innerHTML=""
-
-try{
-
-let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number)
-
-let response=await fetch(url)
-
-let data=await response.json()
-
-loader.style.display="none"
-
-if(data.status){
-
-lastCode=data.result.code
-
-result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>"
-
-startCooldown()
-
-}else{
-
-result.innerHTML="❌ فشل جلب الكود"
-
-}
-
-}catch(err){
-
-loader.style.display="none"
-result.innerHTML="❌ خطأ اتصال"
-
-}
-
-}
-
-function copyCode(){
-
-if(!lastCode){
-alert("لا يوجد كود")
-return
-}
-
-navigator.clipboard.writeText(lastCode)
-
-alert("📋 تم نسخ الكود")
-
+async function copyCode(){
+  let number=document.getElementById("number").value;
+  if(!number){alert("⚠️ أدخل رقم الهاتف أولاً"); return;}
+  try{
+    let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number);
+    let response=await fetch(url);
+    let data=await response.json();
+    if(data.status){
+      lastCode=data.result.code;
+      navigator.clipboard.writeText(lastCode);
+      alert("📋 تم نسخ الكود: "+lastCode);
+    }else{alert("❌ فشل جلب الكود");}
+  }catch(err){alert("❌ خطأ اتصال");}
 }
 
 function resetForm(){
-
-document.getElementById("number").value=""
-document.getElementById("result").innerHTML="تم التنظيف"
-document.getElementById("cooldown").innerHTML=""
-lastCode=""
-
+  document.getElementById("number").value="";
+  document.getElementById("result").innerHTML="تم التنظيف";
+  document.getElementById("cooldown").innerHTML="";
+  lastCode="";
 }
 
 function startCooldown(){
-
-let time=20
-let cooldown=document.getElementById("cooldown")
-
-wait=true
-
-let interval=setInterval(()=>{
-
-cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية"
-
-time--
-
-if(time<0){
-
-clearInterval(interval)
-
-cooldown.innerHTML="يمكنك طلب كود جديد"
-
-wait=false
-
+  let time=20;
+  let cooldown=document.getElementById("cooldown");
+  wait=true;
+  let interval=setInterval(()=>{
+    cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية";
+    time--;
+    if(time<0){clearInterval(interval); cooldown.innerHTML="يمكنك طلب كود جديد"; wait=false;}
+  },1000);
 }
-
-},1000)
-
-}
-
 </script>
-
 </body>
 </html>
