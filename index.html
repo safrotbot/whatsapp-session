@@ -3,162 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♯ЅᗩFᏒOT꙯</title>
-
+<title>SAFROT BOT</title>
 <style>
-html,body{
-  margin:0;
-  padding:0;
-  height:100%;
-  font-family:'Segoe UI',sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:url('background.jpg') no-repeat center center/cover;
-  position:relative;
+*{box-sizing:border-box;font-family:Arial;}
+body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:url("background.jpg") center/cover no-repeat;}
+.container{position:relative;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);padding:30px;border-radius:20px;width:90%;max-width:420px;text-align:center;box-shadow:0 0 40px rgba(0,0,0,0.8);}
+.logo-text{
+font-size:35px;color:#fff;margin-bottom:5px;font-weight:bold;
+text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;
+animation: glow 1.5s ease-in-out infinite alternate;
 }
-body::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.45);
-  backdrop-filter:blur(4px);
-  z-index:0;
+.decor{color:white;font-size:18px;margin-bottom:15px;text-shadow:0 0 5px #fff,0 0 10px #ccc;}
+@keyframes glow{
+0%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
+50%{text-shadow:0 0 10px #3b82f6,0 0 20px #3b82f6,0 0 30px #6366f1,0 0 50px #6366f1;}
+100%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
 }
-#logo{
-  position:absolute;
-  top:25px;
-  font-size:24px;
-  color:#fff;
-  font-weight:bold;
-  text-shadow:0 0 10px rgba(255,255,255,0.4);
-  z-index:2;
-}
-.container{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  align-items:center;
-  z-index:2;
-}
-button.main-btn{
-  width:220px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.35);
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-  transition:all .2s ease;
-}
-button.main-btn:hover{
-  background:rgba(0,0,0,0.55);
-  transform:translateY(-2px);
-}
-input{
-  width:220px;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  outline:none;
-  text-align:center;
-  background:rgba(255,255,255,0.15);
-  color:#fff;
-  backdrop-filter:blur(8px);
-}
-input::placeholder{
-  color:#ddd;
-}
-#audioBtn{
-  width:35px;
-  height:35px;
-  font-size:18px;
-  position:absolute;
-  top:20px;
-  right:20px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.3);
-  background:rgba(0,0,0,0.25);
-  color:#fff;
-  cursor:pointer;
-  backdrop-filter:blur(6px);
-}
+input{width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:15px;background:rgba(0,0,0,0.6);color:white;text-align:center;font-size:16px;}
+.buttons{display:flex;flex-direction:column;gap:8px;}
+button{border:none;padding:12px;border-radius:12px;font-size:15px;cursor:pointer;transition:0.2s;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);color:white;}
+button:hover{transform:scale(1.05);}
+.extra{position:absolute;top:10px;right:15px;display:flex;flex-direction:column;gap:8px;}
+.extra button{background:rgba(255,255,255,0.2);border-radius:20px;padding:10px 18px;backdrop-filter:blur(10px);}
+.extra button.channel{position:absolute;right:-50px;top:0;padding:10px 14px;}
+.extra button.dev{position:absolute;right:-50px;top:50px;padding:10px 14px;}
+.result{margin-top:20px;background:rgba(0,0,0,0.6);padding:12px;border-radius:10px;font-size:17px;word-wrap:break-word;color:white;}
+.loader{margin-top:15px;display:none;color:white;}
+.cooldown{margin-top:10px;font-size:14px;color:#ccc;}
 </style>
 </head>
 <body>
-
-<div id="logo">♯ЅᗩFᏒOT꙯</div>
-
 <div class="container">
 
-  <input type="text" id="numberInput" placeholder="اكتب الرقم هنا">
+<h1 class="logo-text">♯ЅᗩFᏒOT꙯</h1>
+<div class="decor">⚇━━━━━━❰･𓃦･❱━━━━━━⚇</div>
 
-  <button class="main-btn" id="getCodeBtn">📡 طلب الكود ونسخه</button>
-
-  <a href="https://api.whatsapp.com/send?phone=201115618853" target="_blank">
-    <button class="main-btn">👨‍💻 المطور</button>
-  </a>
-
-  <a href="https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46" target="_blank">
-    <button class="main-btn">📢 القناة</button>
-  </a>
-
-  <button id="audioBtn">🔊</button>
-
+<input id="number" placeholder="+201XXXXXXXXX">
+<div class="buttons">
+<button class="get" onclick="getCode()">طلب الكود</button>
+<button class="copy" onclick="copyCode()">نسخ</button>
+<button class="reset" onclick="resetForm()">تنظيف</button>
 </div>
 
-<audio id="bgAudio" loop>
-  <source src="sound.mp3" type="audio/mpeg">
-</audio>
+<div class="extra">
+<button onclick="playSound()">🔊</button>
+<button class="channel" onclick="openChannel()">📢</button>
+<button class="dev" onclick="openDev()">👨‍💻</button>
+</div>
 
+<div class="loader" id="loader">⏳ جاري جلب الكود...</div>
+<div class="result" id="result">لم يتم طلب كود بعد</div>
+<div class="cooldown" id="cooldown"></div>
+</div>
+
+<audio id="sound"><source src="sound.mp3" type="audio/mpeg"></audio>
 <script>
-const getCodeBtn = document.getElementById("getCodeBtn");
-const numberInput = document.getElementById("numberInput");
-const audio = document.getElementById("bgAudio");
-const audioBtn = document.getElementById("audioBtn");
-
-/* تشغيل الصوت عند أول نقرة */
-document.addEventListener("click",()=>{
-  if(audio.paused){
-    audio.volume=0.3;
-    audio.play().catch(()=>{});
-  }
-},{once:true});
-
-audioBtn.onclick=()=>{
-  if(audio.paused){
-    audio.play().catch(()=>{});
-    audioBtn.innerText="🔇";
-  }else{
-    audio.pause();
-    audioBtn.innerText="🔊";
-  }
-};
-
-/* طلب الكود ونسخه مباشرة */
-getCodeBtn.onclick=async()=>{
-  const number = numberInput.value.trim();
-  if(!number) return;
-
-  try{
-    const res = await fetch(`https://api-dataflowx.vercel.app/api/v1/contact/apii?number=${encodeURIComponent(number)}`);
-    const data = await res.json();
-
-    if(data.status && data.result.code){
-      const code = data.result.code;
-      navigator.clipboard.writeText(code).catch(()=>{});
-      alert("✅ تم نسخ الكود تلقائياً");
-    }else{
-      alert("❌ فشل جلب الكود");
-    }
-
-  }catch{
-    alert("❌ خطأ في الاتصال بالـ API");
-  }
-};
+let lastCode="",wait=false;
+function playSound(){document.getElementById("sound").play()}
+function openDev(){window.open("https://wa.me/201115618853")}
+function openChannel(){window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")}
+async function getCode(){
+if(wait){return}
+let number=document.getElementById("number").value,result=document.getElementById("result"),loader=document.getElementById("loader");
+if(!number){result.innerHTML="⚠️ أدخل رقم هاتف";return}
+loader.style.display="block";result.innerHTML=""
+try{
+let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number)
+let response=await fetch(url),data=await response.json()
+loader.style.display="none"
+if(data.status){lastCode=data.result.code;result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>";startCooldown()}
+else{result.innerHTML="❌ فشل جلب الكود"}
+}catch(err){loader.style.display="none";result.innerHTML="❌ خطأ اتصال"}
+}
+function copyCode(){if(!lastCode){alert("لا يوجد كود");return}navigator.clipboard.writeText(lastCode);alert("📋 تم نسخ الكود")}
+function resetForm(){document.getElementById("number").value="";document.getElementById("result").innerHTML="تم التنظيف";document.getElementById("cooldown").innerHTML="";lastCode=""}
+function startCooldown(){let time=20,cooldown=document.getElementById("cooldown");wait=true;let interval=setInterval(()=>{cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية";time--;if(time<0){clearInterval(interval);cooldown.innerHTML="يمكنك طلب كود جديد";wait=false}},1000)}
 </script>
-
 </body>
 </html>
