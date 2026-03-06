@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAFROT BOT</title>
 <style>
-*{box-sizing:border-box;font-family:Arial;}
-body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:url("background.jpg") center/cover no-repeat;}
-.container{position:relative;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);padding:30px;border-radius:20px;width:90%;max-width:420px;text-align:center;box-shadow:0 0 40px rgba(0,0,0,0.8);}
+*{box-sizing:border-box;font-family:Arial;margin:0;padding:0;}
+body{height:100vh;display:flex;align-items:center;justify-content:center;background:url("background.jpg") center/cover no-repeat;background-size:cover;}
+.container{position:relative;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);padding:20px;border-radius:20px;width:90%;max-width:420px;text-align:center;box-shadow:0 0 40px rgba(0,0,0,0.8);}
 .logo-text{
-font-size:35px;color:#fff;margin-bottom:5px;font-weight:bold;
+font-size:28px;color:#fff;margin-bottom:5px;font-weight:bold;
 text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;
 animation: glow 1.5s ease-in-out infinite alternate;
 }
@@ -19,36 +19,37 @@ animation: glow 1.5s ease-in-out infinite alternate;
 50%{text-shadow:0 0 10px #3b82f6,0 0 20px #3b82f6,0 0 30px #6366f1,0 0 50px #6366f1;}
 100%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
 }
-input{width:100%;padding:12px;border:none;border-radius:10px;margin-bottom:15px;background:rgba(0,0,0,0.6);color:white;text-align:center;font-size:16px;}
-.buttons{display:flex;flex-direction:column;gap:8px;}
+input{width:100%;padding:12px;border:none;border-radius:10px;margin-top:15px;background:rgba(0,0,0,0.6);color:white;text-align:center;font-size:16px;}
+.buttons{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
 button{border:none;padding:12px;border-radius:12px;font-size:15px;cursor:pointer;transition:0.2s;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);color:white;}
 button:hover{transform:scale(1.05);}
-.extra{position:absolute;top:10px;right:15px;display:flex;flex-direction:column;gap:8px;}
-.extra button{background:rgba(255,255,255,0.2);border-radius:20px;padding:10px 18px;backdrop-filter:blur(10px);}
-.extra button.channel{position:absolute;right:-50px;top:0;padding:10px 14px;}
-.extra button.dev{position:absolute;right:-50px;top:50px;padding:10px 14px;}
+.extra{display:flex;justify-content:center;gap:15px;margin-bottom:10px;}
+.extra button{background:rgba(255,255,255,0.2);border-radius:20px;padding:10px 14px;backdrop-filter:blur(10px);}
 .result{margin-top:20px;background:rgba(0,0,0,0.6);padding:12px;border-radius:10px;font-size:17px;word-wrap:break-word;color:white;}
 .loader{margin-top:15px;display:none;color:white;}
 .cooldown{margin-top:10px;font-size:14px;color:#ccc;}
+.logo-img{width:100%;height:auto;margin-bottom:15px;}
 </style>
 </head>
 <body>
 <div class="container">
 
+<img src="logo.png" class="logo-img" alt="logo">
+
 <h1 class="logo-text">♯ЅᗩFᏒOT꙯</h1>
-<div class="decor">⚇━━━━━━❰･𓃦･❱━━━━━━⚇</div>
+<div class="decor">⚇━━━━━❰･𓃦･❱━━━━━⚇</div>
+
+<div class="extra">
+<button onclick="playSound()">🔊</button>
+<button onclick="openChannel()">📢</button>
+<button onclick="openDev()">👨‍💻</button>
+</div>
 
 <input id="number" placeholder="+201XXXXXXXXX">
 <div class="buttons">
 <button class="get" onclick="getCode()">طلب الكود</button>
 <button class="copy" onclick="copyCode()">نسخ</button>
 <button class="reset" onclick="resetForm()">تنظيف</button>
-</div>
-
-<div class="extra">
-<button onclick="playSound()">🔊</button>
-<button class="channel" onclick="openChannel()">📢</button>
-<button class="dev" onclick="openDev()">👨‍💻</button>
 </div>
 
 <div class="loader" id="loader">⏳ جاري جلب الكود...</div>
