@@ -5,80 +5,299 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAFROT BOT</title>
 <style>
-*{box-sizing:border-box;font-family:Arial;margin:0;padding:0;}
-body{height:100vh;display:flex;align-items:center;justify-content:center;background:url("background.jpg") center/cover no-repeat;background-size:cover;}
-.container{position:relative;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);padding:20px;border-radius:20px;width:90%;max-width:420px;text-align:center;box-shadow:0 0 40px rgba(0,0,0,0.8);}
-.logo-text{
-font-size:28px;color:#fff;margin-bottom:5px;font-weight:bold;
-text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;
-animation: glow 1.5s ease-in-out infinite alternate;
+*{
+  box-sizing:border-box;
+  font-family:Arial;
+  margin:0;
+  padding:0;
 }
-.decor{color:white;font-size:18px;margin-bottom:15px;text-shadow:0 0 5px #fff,0 0 10px #ccc;}
+body{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:url("background.jpg") center/cover no-repeat;
+  background-size:cover;
+}
+.container{
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(12px);
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(0,0,0,0.8);
+}
+
+h1.logo-text{
+  font-size:28px;
+  color:#fff;
+  margin-bottom:5px;
+  font-weight:bold;
+  text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;
+  animation:glow 1.5s ease-in-out infinite alternate;
+}
+
+.decor{
+  color:white;
+  font-size:18px;
+  margin-bottom:15px;
+  text-shadow:0 0 5px #fff,0 0 10px #ccc;
+}
+
 @keyframes glow{
 0%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
 50%{text-shadow:0 0 10px #3b82f6,0 0 20px #3b82f6,0 0 30px #6366f1,0 0 50px #6366f1;}
 100%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
 }
-input{width:100%;padding:12px;border:none;border-radius:10px;margin-top:15px;background:rgba(0,0,0,0.6);color:white;text-align:center;font-size:16px;}
-.buttons{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-button{border:none;padding:12px;border-radius:12px;font-size:15px;cursor:pointer;transition:0.2s;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);color:white;}
-button:hover{transform:scale(1.05);}
-.extra{display:flex;justify-content:center;gap:15px;margin-bottom:10px;}
-.extra button{background:rgba(255,255,255,0.2);border-radius:20px;padding:10px 14px;backdrop-filter:blur(10px);}
-.result{margin-top:20px;background:rgba(0,0,0,0.6);padding:12px;border-radius:10px;font-size:17px;word-wrap:break-word;color:white;}
-.loader{margin-top:15px;display:none;color:white;}
-.cooldown{margin-top:10px;font-size:14px;color:#ccc;}
-.logo-img{width:100%;height:auto;margin-bottom:15px;}
+
+input{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin-bottom:15px;
+  background:#111;
+  color:white;
+  text-align:center;
+  font-size:16px;
+}
+
+.buttons{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+button{
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  font-size:15px;
+  cursor:pointer;
+  flex:1;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+.get{
+  background:#3b82f6;
+  color:white;
+}
+
+.copy{
+  background:#10b981;
+  color:white;
+}
+
+.reset{
+  background:#ef4444;
+  color:white;
+}
+
+.extra{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:10px;
+}
+
+.extra button{
+  background:rgba(99,102,241,0.5);
+  border-radius:20px;
+  padding:10px 14px;
+  backdrop-filter:blur(10px);
+  color:white;
+  transition:0.2s;
+}
+
+.extra button:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1;
+}
+
+.result{
+  margin-top:20px;
+  background:#111;
+  padding:12px;
+  border-radius:10px;
+  font-size:17px;
+  word-wrap:break-word;
+  color:white;
+}
+
+.loader{
+  margin-top:15px;
+  display:none;
+  color:white;
+}
+
+.cooldown{
+  margin-top:10px;
+  font-size:14px;
+  color:#ccc;
+}
 </style>
 </head>
 <body>
+
 <div class="container">
 
-<img src="logo.png" class="logo-img" alt="logo">
-
 <h1 class="logo-text">♯ЅᗩFᏒOT꙯</h1>
-<div class="decor">⚇━━━━━❰･𓃦･❱━━━━━⚇</div>
+<div class="decor">⚇━━━━━━❰･𓃦･❱━━━━━━⚇</div>
 
 <div class="extra">
 <button onclick="playSound()">🔊</button>
-<button onclick="openChannel()">📢</button>
 <button onclick="openDev()">👨‍💻</button>
+<button onclick="openChannel()">📢</button>
 </div>
 
 <input id="number" placeholder="+201XXXXXXXXX">
+
 <div class="buttons">
 <button class="get" onclick="getCode()">طلب الكود</button>
 <button class="copy" onclick="copyCode()">نسخ</button>
 <button class="reset" onclick="resetForm()">تنظيف</button>
 </div>
 
-<div class="loader" id="loader">⏳ جاري جلب الكود...</div>
-<div class="result" id="result">لم يتم طلب كود بعد</div>
-<div class="cooldown" id="cooldown"></div>
+<div class="loader" id="loader">
+⏳ جاري جلب الكود...
 </div>
 
-<audio id="sound"><source src="sound.mp3" type="audio/mpeg"></audio>
+<div class="result" id="result">
+لم يتم طلب كود بعد
+</div>
+
+<div class="cooldown" id="cooldown"></div>
+
+</div>
+
+<audio id="sound">
+<source src="sound.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-let lastCode="",wait=false;
-function playSound(){document.getElementById("sound").play()}
-function openDev(){window.open("https://wa.me/201115618853")}
-function openChannel(){window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")}
-async function getCode(){
-if(wait){return}
-let number=document.getElementById("number").value,result=document.getElementById("result"),loader=document.getElementById("loader");
-if(!number){result.innerHTML="⚠️ أدخل رقم هاتف";return}
-loader.style.display="block";result.innerHTML=""
-try{
-let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number)
-let response=await fetch(url),data=await response.json()
-loader.style.display="none"
-if(data.status){lastCode=data.result.code;result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>";startCooldown()}
-else{result.innerHTML="❌ فشل جلب الكود"}
-}catch(err){loader.style.display="none";result.innerHTML="❌ خطأ اتصال"}
+
+let lastCode=""
+let wait=false
+
+function playSound(){
+document.getElementById("sound").play()
 }
-function copyCode(){if(!lastCode){alert("لا يوجد كود");return}navigator.clipboard.writeText(lastCode);alert("📋 تم نسخ الكود")}
-function resetForm(){document.getElementById("number").value="";document.getElementById("result").innerHTML="تم التنظيف";document.getElementById("cooldown").innerHTML="";lastCode=""}
-function startCooldown(){let time=20,cooldown=document.getElementById("cooldown");wait=true;let interval=setInterval(()=>{cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية";time--;if(time<0){clearInterval(interval);cooldown.innerHTML="يمكنك طلب كود جديد";wait=false}},1000)}
+
+function openDev(){
+window.open("https://wa.me/201115618853")
+}
+
+function openChannel(){
+window.open("https://whatsapp.com/channel/0029VaeXAKJAjPXLKGuZSr46")
+}
+
+async function getCode(){
+
+if(wait){
+return
+}
+
+let number=document.getElementById("number").value
+let result=document.getElementById("result")
+let loader=document.getElementById("loader")
+
+if(!number){
+result.innerHTML="⚠️ أدخل رقم هاتف"
+return
+}
+
+loader.style.display="block"
+result.innerHTML=""
+
+try{
+
+let url="https://api-dataflowx.vercel.app/api/v1/contact/apii?number="+encodeURIComponent(number)
+
+let response=await fetch(url)
+
+let data=await response.json()
+
+loader.style.display="none"
+
+if(data.status){
+
+lastCode=data.result.code
+
+result.innerHTML="✅ الكود:<br><b>"+lastCode+"</b>"
+
+startCooldown()
+
+}else{
+
+result.innerHTML="❌ فشل جلب الكود"
+
+}
+
+}catch(err){
+
+loader.style.display="none"
+result.innerHTML="❌ خطأ اتصال"
+
+}
+
+}
+
+function copyCode(){
+
+if(!lastCode){
+alert("لا يوجد كود")
+return
+}
+
+navigator.clipboard.writeText(lastCode)
+
+alert("📋 تم نسخ الكود")
+
+}
+
+function resetForm(){
+
+document.getElementById("number").value=""
+document.getElementById("result").innerHTML="تم التنظيف"
+document.getElementById("cooldown").innerHTML=""
+lastCode=""
+
+}
+
+function startCooldown(){
+
+let time=20
+let cooldown=document.getElementById("cooldown")
+
+wait=true
+
+let interval=setInterval(()=>{
+
+cooldown.innerHTML="يمكن طلب كود جديد بعد "+time+" ثانية"
+
+time--
+
+if(time<0){
+
+clearInterval(interval)
+
+cooldown.innerHTML="يمكنك طلب كود جديد"
+
+wait=false
+
+}
+
+},1000)
+
+}
+
 </script>
+
 </body>
 </html>
