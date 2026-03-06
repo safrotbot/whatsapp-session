@@ -1,160 +1,166 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>SAFROT BOT</title>
-
 <style>
-
 *{
-box-sizing:border-box;
-font-family:Arial;
+  box-sizing:border-box;
+  font-family:Arial;
+  margin:0;
+  padding:0;
 }
-
 body{
-margin:0;
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-background:url("background.jpg") center/cover no-repeat;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:url("background.jpg") center/cover no-repeat;
+  background-size:cover;
 }
-
 .container{
-background:rgba(0,0,0,0.6);
-backdrop-filter:blur(12px);
-padding:30px;
-border-radius:20px;
-width:90%;
-max-width:420px;
-text-align:center;
-box-shadow:0 0 40px rgba(0,0,0,0.8);
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(12px);
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(0,0,0,0.8);
 }
 
-.logo{
-width:90px;
-border-radius:50%;
-margin-bottom:10px;
-box-shadow:0 0 20px #000;
+h1.logo-text{
+  font-size:28px;
+  color:#fff;
+  margin-bottom:5px;
+  font-weight:bold;
+  text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;
+  animation:glow 1.5s ease-in-out infinite alternate;
 }
 
-h1{
-margin:10px 0 20px 0;
+.decor{
+  color:white;
+  font-size:18px;
+  margin-bottom:15px;
+  text-shadow:0 0 5px #fff,0 0 10px #ccc;
+}
+
+@keyframes glow{
+0%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
+50%{text-shadow:0 0 10px #3b82f6,0 0 20px #3b82f6,0 0 30px #6366f1,0 0 50px #6366f1;}
+100%{text-shadow:0 0 5px #3b82f6,0 0 10px #3b82f6,0 0 20px #6366f1,0 0 40px #6366f1;}
 }
 
 input{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-margin-bottom:15px;
-background:#111;
-color:white;
-text-align:center;
-font-size:16px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin-bottom:15px;
+  background:#111;
+  color:white;
+  text-align:center;
+  font-size:16px;
 }
 
 .buttons{
-display:flex;
-gap:8px;
+  display:flex;
+  gap:8px;
+  margin-top:10px;
 }
 
 button{
-border:none;
-padding:12px;
-border-radius:10px;
-font-size:15px;
-cursor:pointer;
-flex:1;
-transition:0.2s;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  font-size:15px;
+  cursor:pointer;
+  flex:1;
+  transition:0.2s;
+  background:rgba(255,255,255,0.05); /* شفاف جدًا */
+  color:white;
 }
 
 button:hover{
-transform:scale(1.05);
+  transform:scale(1.05);
+  box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1; /* توهج عند hover */
 }
 
 .get{
-background:#3b82f6;
-color:white;
+  background:rgba(59,130,246,0.2);
 }
 
 .copy{
-background:#10b981;
-color:white;
+  background:rgba(16,185,129,0.2);
 }
 
 .reset{
-background:#ef4444;
-color:white;
+  background:rgba(239,68,68,0.2);
 }
 
 .extra{
-margin-top:15px;
-display:flex;
-flex-direction:column;
-gap:8px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:10px;
 }
 
 .extra button{
-background:#6366f1;
-color:white;
+  background:rgba(255,255,255,0.1); /* شفاف */
+  border-radius:20px;
+  padding:10px 14px;
+  backdrop-filter:blur(10px);
+  color:white;
+  transition:0.2s;
+}
+.extra button:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 10px #3b82f6,0 0 20px #6366f1;
 }
 
 .result{
-margin-top:20px;
-background:#111;
-padding:12px;
-border-radius:10px;
-font-size:17px;
-word-wrap:break-word;
+  margin-top:20px;
+  background:#111;
+  padding:12px;
+  border-radius:10px;
+  font-size:17px;
+  word-wrap:break-word;
+  color:white;
 }
 
 .loader{
-margin-top:15px;
-display:none;
+  margin-top:15px;
+  display:none;
+  color:white;
 }
 
 .cooldown{
-margin-top:10px;
-font-size:14px;
-color:#ccc;
+  margin-top:10px;
+  font-size:14px;
+  color:#ccc;
 }
-
 </style>
-
 </head>
-
 <body>
 
 <div class="container">
 
-<img src="logo.png" class="logo">
+<h1 class="logo-text">♯ЅᗩFᏒOT꙯</h1>
+<div class="decor">⚇━━━━━━❰･𓃦･❱━━━━━━⚇</div>
 
-<h1>SAFROT BOT</h1>
+<div class="extra">
+<button onclick="playSound()">🔊</button>
+<button onclick="openDev()">👨‍💻</button>
+<button onclick="openChannel()">📢</button>
+</div>
 
 <input id="number" placeholder="+201XXXXXXXXX">
 
 <div class="buttons">
-
 <button class="get" onclick="getCode()">طلب الكود</button>
-
 <button class="copy" onclick="copyCode()">نسخ</button>
-
 <button class="reset" onclick="resetForm()">تنظيف</button>
-
-</div>
-
-<div class="extra">
-
-<button onclick="playSound()">🔊 تشغيل الصوت</button>
-
-<button onclick="openDev()">👨‍💻 شات المطور</button>
-
-<button onclick="openChannel()">📢 القناة</button>
-
 </div>
 
 <div class="loader" id="loader">
